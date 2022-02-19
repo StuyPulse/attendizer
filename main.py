@@ -26,7 +26,10 @@ def mark_present(student):
     print(f"Marked {student} present", file=sys.stderr)
 
 if __name__ == "__main__":
-    students = parse_students(sys.stdin, Student)
+    readpath = sys.argv[1]
+
+    readfile = open(readpath, "r")
+    students = parse_students(readfile, Student)
 
     while True:
         line = sys.stdin.readline()
@@ -50,3 +53,5 @@ if __name__ == "__main__":
             new_student = NewStudent(fname, sname, osis)
             students[osis] = new_student
             mark_present(new_student)    
+
+    readfile.close()
