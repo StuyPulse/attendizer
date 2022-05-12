@@ -20,7 +20,11 @@
   },
   "homepage": "https://github.com/StuyPulse/attendizer#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
