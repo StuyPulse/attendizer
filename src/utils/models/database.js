@@ -20,6 +20,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelizeInstance = sequelizeInstance;
 
-db.students = require("./models/Student.js")(sequelizeInstance, Sequelize);
+db.students = require("./Student.js")(sequelizeInstance, Sequelize);
 
 module.exports = db;
