@@ -1,4 +1,4 @@
-const { Sequelize } = require("../database");
+const { Sequelize } = require("./database");
 
 module.exports = (sequelizeInstance, Sequelize) => {
     const Student = sequelizeInstance.define(
@@ -7,14 +7,19 @@ module.exports = (sequelizeInstance, Sequelize) => {
                 type: Sequelize.STRING
             },
             studentID: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                primaryKey: true,
+                unique: true 
             },
             UUID: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                unique: true 
             },
             meetingsAttended: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                defaultValue: 0 
             }
         }
     )
+    return Student;
 }
