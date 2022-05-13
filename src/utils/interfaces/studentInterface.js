@@ -1,6 +1,6 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
-const db = require("../models");
+const db = require("../../models");
 const studentList = db.students;
 const entry = db.attendanceEntry;
 
