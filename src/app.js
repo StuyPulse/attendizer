@@ -1,10 +1,10 @@
 const express = require('express');
-
 const app = express();
 
-// ========== ROUTES ==========
+// Add routes from src/routes
+// require('./src/routes/id.routes')(app);
 
-// ========== SERVER ==========
+// Start the server
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
