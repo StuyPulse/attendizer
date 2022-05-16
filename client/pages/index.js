@@ -9,6 +9,15 @@ export default function Home() {
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 className={styles.title}>Attendizer</h1>
+
+          <p className={styles.description}>
+            Please swipe your student ID card!
+          </p>
+
+          <form action="/placeholder" method="post">
+            <input type="number" id="id" name="id" className={styles.input} />
+            <button type="submit">Submit</button>
+          </form>
         </main>
       </div>
     </>
