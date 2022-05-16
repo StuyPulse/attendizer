@@ -18,6 +18,8 @@ export default function Home() {
             <input type="number" id="id" name="id" className={styles.input} />
             <button type="submit">Submit</button>
           </form>
+
+          <a href="/register">Register Here</a>
         </main>
       </div>
     </>
