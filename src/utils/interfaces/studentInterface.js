@@ -19,9 +19,9 @@ exports.addStudent = (req, res) => {
         return;
     }
 
-    if(req.body.UUID.length.toString() != 13){
+    if(req.body.UID.length.toString() != 13){
         res.status(400).send({
-            message: "Student UUID length invalid."
+            message: "Student UID length invalid."
         });
         return;
     }
@@ -29,10 +29,10 @@ exports.addStudent = (req, res) => {
     const newStudent = {
         name: req.body.name,
         studentID: req.body.studentID,
-        UUID: req.body.UUID,
+        UID: req.body.UID,
     };
 
-    await studentList.create(newStudent, { fields: ['name', 'studentID', 'UUID'] });
+    await studentList.create(newStudent, { fields: ['name', 'studentID', 'UID'] });
 }
 
 exports.scanID = (req, res) => {
