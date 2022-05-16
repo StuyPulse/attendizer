@@ -1,14 +1,17 @@
-const { Sequelize } = require("../database");
+const Sequelize = require('./database');
 
-module.exports = (sequelizeInstance, Sequelize) => {
-    const entry = sequelizeInstance.define(
-        "entry", {
-            name: {
-                type: Sequelize.STRING
-            },
-            meetingsAttended: {
-                type: Sequelize.INTEGER
-            }
-        }
-    )
-}
+module.exports = async (sequelizeInstance, Sequelize) => {
+  const entry = await sequelizeInstance.define(
+    'entry',
+    {
+      // studentId: {
+      //     type: Sequelize.INTEGER
+      // },
+      // meetingId: {
+      //     type: Sequelize.INTEGER
+      // }
+    },
+    { timestamps: false }
+  );
+  return entry;
+};

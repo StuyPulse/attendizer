@@ -1,24 +1,24 @@
 const Sequelize = require('./database');
 
 module.exports = async (sequelizeInstance, Sequelize) => {
-  const student = await sequelizeInstance.define(
-    'student',
+  const meeting = await sequelizeInstance.define(
+    'meeting',
     {
       Id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         unique: true
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      uid: {
-        type: Sequelize.INTEGER,
+      meetingDate: {
+        // type: Sequelize.INTEGER,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
         unique: true
       }
     },
     { timestamps: false }
   );
 
-  return student;
+  return meeting;
 };
