@@ -34,7 +34,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelizeInstance = sequelizeInstance;
 
-const students = require('./student.js')(sequelizeInstance, Sequelize);
+const students = require('./studentClass.js')(sequelizeInstance, Sequelize);
 const meetings = require('./meeting.js')(sequelizeInstance, Sequelize);
 const entries = require('./attendanceEntry.js')(sequelizeInstance, Sequelize);
 
