@@ -2,11 +2,11 @@ const req = require('express/lib/request');
 const mysql = require('mysql2');
 const Sequelize = require('sequelize');
 const databaseConfig = require('../config/database_config.js');
+const sequelizeInstance = new Sequelize('sqlite::memory:');
+
 const students = require('./student.js')(sequelizeInstance, Sequelize);
 const meetings = require('./meeting.js')(sequelizeInstance, Sequelize);
 const entries = require('./attendanceEntry.js')(sequelizeInstance, Sequelize);
-
-const sequelizeInstance = new Sequelize('sqlite::memory:');
 
 try {
   sequelizeInstance.authenticate();
