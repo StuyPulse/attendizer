@@ -1,9 +1,10 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
 const dbinit = require("../../models/database.js");
+const db = (async () => {await dbinit()})();
 
 exports.addStudent = async (req, res) => {
-    const db = await dbinit();
+    // const db = await dbinit();
     console.log(req.body);
     if(!req.body.name){
         res.status(400).send({
@@ -40,7 +41,7 @@ exports.addStudent = async (req, res) => {
     });
 }
 
-exports.scanID = (req, res) => {
+exports.scanID = async (req, res) => {
     const id = req.body.id;
     const len = id.toString().length;
     if(len != 9 || len != 13){
@@ -50,10 +51,10 @@ exports.scanID = (req, res) => {
         return;
     }
     if(len == 9){
-        const student = db.students.findOne({where: {osis: id}});
+        const student = await db.students.findOne({where: {osis: id}});
     }
     if(len == 13){
-        const student = db.students.findOne({where: {osis: id}});
+        const student = await db.students.findOne({where: {osis: id}});
     }
     if(student == null) {
         res.status(400).send({
@@ -62,9 +63,9 @@ exports.scanID = (req, res) => {
         return;
     }
 
-    const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
+    const meeting = await db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
     if(meeting == null) {
-        meeting = db.meetings.create({});
+        meeting = await db.meetings.create({});
     }
 
     db.entries.create(student.studentId, meeting.meetingId);
