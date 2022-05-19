@@ -1,5 +1,5 @@
-module.exports = app => {
-    const interface = require("./utils/interfaces/studentInterface.js");
+module.exports = (app) => {
+    const interface = require("../utils/interfaces/studentInterface.js");
 
     var router = require("express").Router();
 

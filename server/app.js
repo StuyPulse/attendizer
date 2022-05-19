@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const dbinit = require("./src/models/database.js");
-require("./src/routes/routes.js");
+require("./src/routes/routes.js")(app);
 
 const testFuncs = require("./src/utils/interfaces/studentInterface.js");
 
