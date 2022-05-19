@@ -5,6 +5,8 @@ const studentList = db.students;
 const entry = db.attendanceEntry;
 
 exports.addStudent = (req, res) => {
+    console.log("test");
+
     if(!req.body.name){
         res.status(400).send({
             message: "Cannot be empty!"
@@ -46,21 +48,21 @@ exports.scanID = (req, res) => {
     }
     if(len == 9){
         const student = db.students.findOne({where: {osis: id}});
-        if(student == null) {
-            res.status(400).send({
-                message: "Could not find student from osis."
-            });
-            return;
-        }
-
-        const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
-        if(meeting == null) {
-            meeting = db.meetings.create({});
-        }
-
-        db.entries.create(student.studentId, meeting.meetingId);
     }
     if(len == 13){
-
+        const student = db.students.findOne({where: {osis: id}});
     }
+    if(student == null) {
+        res.status(400).send({
+            message: "Could not find student from osis."
+        });
+        return;
+    }
+
+    const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
+    if(meeting == null) {
+        meeting = db.meetings.create({});
+    }
+
+    db.entries.create(student.studentId, meeting.meetingId);
 }
