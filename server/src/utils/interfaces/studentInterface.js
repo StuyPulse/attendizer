@@ -1,27 +1,25 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
-const db = require("../../models/database.js");
-const studentList = db.students;
-const entry = db.attendanceEntry;
+const dbinit = require("../../models/database.js");
 
-exports.addStudent = (req, res) => {
-    console.log("test");
-
+exports.addStudent = async (req, res) => {
+    const db = await dbinit();
+    console.log(req.body);
     if(!req.body.name){
         res.status(400).send({
-            message: "Cannot be empty!"
+            message: "Must need name!"
         });
         return;
     }
 
-    if(req.body.osis.toString() != 9){
+    if(req.body.osis.toString().length != 9){
         res.status(400).send({
             message: "Student ID length invalid."
         });
         return;
     }
 
-    if(req.body.uid.length.toString() != 13){
+    if(req.body.uid.length != 13){
         res.status(400).send({
             message: "Student UID length invalid."
         });
@@ -34,7 +32,12 @@ exports.addStudent = (req, res) => {
         uid: req.body.uid,
     };
 
-    studentList.create(newStudent, { fields: ['name', 'osis', 'uid'] });
+    await db.students.create(newStudent, { fields: ['name', 'osis', 'uid'] }).catch(err => {
+        res.status(500).send({
+            message:
+            err.message + ", likely due to this OSIS or UID already existing in the system."
+        })
+    });
 }
 
 exports.scanID = (req, res) => {
