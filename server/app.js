@@ -1,19 +1,27 @@
 const express = require('express');
 const app = express();
-const db = require("./src/models/database.js");
+const dbinit = require("./src/models/database.js");
 
 const port = process.env.PORT || 3000;
 
 (async () => {
-  await db.sequelizeInstance.sync({ force: true });
+  const db = await dbinit();
 
   newStudent = {
-    Id: 123123123,
+    osis: 123123123,
     name: "Vincent Lin",
     uid: 1231231231231
   }
+  newStudent2 = {
+    osis: 123123122,
+    name: "Anthony",
+    uid: 1231231231233
+  }
 
-  console.log(db.students)
+  // db.students.create(newStudent2);
+  // await db.sequelize.sync();
+  const lin = await db.students.findByPk(2);
+  console.log(lin);
 })();
 
 app.listen(port, () => {
