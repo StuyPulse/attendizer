@@ -55,10 +55,10 @@ exports.scanID = (req, res) => {
 
         const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
         if(meeting == null) {
-            db.meetings.create({});
+            meeting = db.meetings.create({});
         }
 
-        
+        db.entries.create(student.studentId, meeting.meetingId);
     }
     if(len == 13){
 
