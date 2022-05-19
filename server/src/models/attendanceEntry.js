@@ -1,7 +1,7 @@
 const Sequelize = require('./database');
 
-module.exports = async (sequelizeInstance, Sequelize) => {
-  const entry = await sequelizeInstance.define(
+module.exports = async (sequelize, Sequelize) => {
+  const entry = await sequelize.define(
     'entry',
     {
       // studentId: {
