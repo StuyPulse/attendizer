@@ -1,13 +1,14 @@
 const Sequelize = require('./database');
 
 module.exports = async (sequelize, Sequelize) => {
+  const today = new Date(new Date(Date.now()).toDateString());
   const meeting = await sequelize.define(
     'meeting',
     {
-      meetingDate: {
+      date: {
         // type: Sequelize.INTEGER,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATEONLY,
+        defaultValue: today,
         unique: true
       }
     },

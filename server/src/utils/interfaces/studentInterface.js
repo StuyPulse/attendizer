@@ -12,14 +12,14 @@ exports.addStudent = (req, res) => {
         return;
     }
 
-    if(req.body.studentID.toString() != 9){
+    if(req.body.osis.toString() != 9){
         res.status(400).send({
             message: "Student ID length invalid."
         });
         return;
     }
 
-    if(req.body.UID.length.toString() != 13){
+    if(req.body.uid.length.toString() != 13){
         res.status(400).send({
             message: "Student UID length invalid."
         });
@@ -28,27 +28,32 @@ exports.addStudent = (req, res) => {
 
     const newStudent = {
         name: req.body.name,
-        studentID: req.body.studentID,
-        UID: req.body.UID,
+        osis: req.body.osis,
+        uid: req.body.uid,
     };
 
-    await studentList.create(newStudent, { fields: ['name', 'studentID', 'UID'] });
+    studentList.create(newStudent, { fields: ['name', 'osis', 'uid'] });
 }
 
 exports.scanID = (req, res) => {
-    const len = req.body.ID.toString().length;
+    const id = req.body.id;
+    const len = id.toString().length;
     if(len != 9 || len != 13){
         res.status(400).send({
             message: "Student ID length invalid."
         });
+        return;
     }
     if(len == 9){
-        student = studentList.findbyPK(id);
-        await studentList.update({  }, {
-            where: {
-                ID: req.body.ID
-            }
-          });
+        const student = db.students.findOne({where: {osis: id}});
+        if(student == null) {
+            res.status(400).send({
+                message: "Could not find student from osis."
+            });
+            return;
+        }
+
+        const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
     }
     if(len == 13){
 
