@@ -1,6 +1,6 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
-const db = require("../../models");
+const db = require("../../models/database.js");
 const studentList = db.students;
 const entry = db.attendanceEntry;
 
@@ -54,6 +54,11 @@ exports.scanID = (req, res) => {
         }
 
         const meeting = db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
+        if(meeting == null) {
+            db.meetings.create({});
+        }
+
+        
     }
     if(len == 13){
 
