@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const dbinit = require("./src/models/database.js");
+require("./src/routes/routes.js");
 
-const port = process.env.PORT || 3000;
+const testFuncs = require("./src/utils/interfaces/studentInterface.js");
+
+const port = process.env.PORT || 4000;
 
 (async () => {
   const db = await dbinit();
@@ -18,10 +21,14 @@ const port = process.env.PORT || 3000;
     uid: 1231231231233
   }
 
+
   // db.students.create(newStudent2);
   // await db.sequelize.sync();
-  const lin = await db.students.findByPk(2);
-  console.log(lin);
+  const students = await db.students.findAll();
+
+  newMeeting = db.meetings.create({});
+
+  console.log(await newMeeting);
 })();
 
 app.listen(port, () => {
