@@ -28,8 +28,6 @@ async function initialize() {
   db.students.belongsToMany(db.meetings, { through: db.entries });
   db.meetings.belongsToMany(db.students, { through: db.entries });
 
-  await db.sequelize.sync({force : false});
-
   return db;
 };
 

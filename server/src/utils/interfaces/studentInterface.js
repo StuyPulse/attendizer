@@ -1,10 +1,9 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
 const dbinit = require("../../models/database.js");
-const db = (async () => {await dbinit()})();
 
 exports.addStudent = async (req, res) => {
-    // const db = await dbinit();
+    const db = await dbinit();
     console.log(req.body);
     if(!req.body.name){
         res.status(400).send({
