@@ -1,6 +1,7 @@
 const req = require("express/lib/request");
 const res = require("express/lib/response");
 const dbinit = require("../../models/database.js");
+const student = require("../../models/student.js");
 
 exports.addStudent = async (req, res) => {
     const db = await dbinit();
@@ -19,7 +20,7 @@ exports.addStudent = async (req, res) => {
         return;
     }
 
-    if(req.body.uid.length != 13){
+    if(req.body.uid.toString().length != 13){
         res.status(400).send({
             message: "Student UID length invalid."
         });
@@ -37,35 +38,60 @@ exports.addStudent = async (req, res) => {
             message:
             err.message + ", likely due to this OSIS or UID already existing in the system."
         })
+        return;
     });
 }
 
 exports.scanID = async (req, res) => {
+    const db = await dbinit();
     const id = req.body.id;
     const len = id.toString().length;
-    if(len != 9 || len != 13){
+    if(len != 9 && len != 13){
         res.status(400).send({
             message: "Student ID length invalid."
         });
         return;
     }
     if(len == 9){
-        const student = await db.students.findOne({where: {osis: id}});
+        foundStudent = await db.students.findOne({where: {osis: id}});
     }
     if(len == 13){
-        const student = await db.students.findOne({where: {osis: id}});
+        foundStudent = await db.students.findOne({where: {uid: id}});
     }
-    if(student == null) {
+    if(foundStudent == null) {
         res.status(400).send({
             message: "Could not find student from osis."
         });
         return;
     }
 
-    const meeting = await db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
+    meeting = await db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
     if(meeting == null) {
         meeting = await db.meetings.create({});
     }
 
-    db.entries.create(student.studentId, meeting.meetingId);
+    entryExist = await db.entries.findOne({
+        where : {
+            studentId: foundStudent.id, 
+            meetingId: meeting.id
+        }
+    });
+
+    if(entryExist != null){
+        res.status(400).send({
+            message: "Student has already swiped in today!"
+        });
+        return;
+    }
+
+    console.log(meeting.id);
+    db.entries.create({
+        studentId: foundStudent.id, 
+        meetingId: meeting.id
+    })
+
+    res.send({
+        name: foundStudent.name,
+        time: Date.now()
+    })
 }
