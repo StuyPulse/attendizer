@@ -1,8 +1,39 @@
+import { useState } from "react";
 import Meta from '../components/Meta';
-import ScanEntry from '../components/ScanEntry';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
+
+  const [scanEntry, setScanEntry] = useState("");
+
+  const processScan = async e => {
+    e.preventDefault();
+    try {
+      // makes POST request to /api/scan
+      const body = { scanEntry }
+      const res = await fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then(res => res.json());
+
+      const scanLog = document.getElementById("scanEntries")
+
+      // notifies user of success
+      let newEntry = document.createElement("p");
+      newEntry.innerHTML = `<b>${res.name}</b> swiped in at <b>${new Date().toLocaleTimeString()}</b>`;
+      newEntry.style.margin = "2px";
+      scanLog.appendChild(newEntry);
+      scanLog.scrollTop = scanLog.scrollHeight;
+
+      // clears input field
+      document.getElementById('scanEntryBox').value = ""
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <>
       <Meta title="Attendizer" />
@@ -15,26 +46,20 @@ export default function Home() {
             Please swipe your student ID card!
           </p>
 
-          <div className={styles.scanEntriesBox}>
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-            <ScanEntry name="Name" time="12:00" />
-          </div>
+          <div id="scanEntries" className={styles.scanLog}></div>
 
-          <form action="/placeholder" method="post" className={styles.form}>
-            <input type="number" id="id" name="id" className={styles.input} />
-            <br />
-            <button type="submit" className={styles.button}>
+          <form id="scanForm" className={styles.form} onSubmit={processScan}>
+            <input
+              type="number"
+              id="scanEntryBox" 
+              className={styles.input}
+              value={scanEntry}
+              onChange={e => setScanEntry(e.target.value)}
+            />
+            <button
+              type="submit"
+              className={styles.button}
+            >
               Submit
             </button>
           </form>
