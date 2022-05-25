@@ -15,8 +15,7 @@ module.exports = async (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         unique: true
       }
-    },
-    { timestamps: false }
+    }
   );
 
   return student;

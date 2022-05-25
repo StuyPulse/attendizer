@@ -65,7 +65,7 @@ exports.scanID = async (req, res) => {
         return;
     }
 
-    meeting = await db.meetings.findOne({where: {date: new Date(new Date(Date.now()).toDateString())}});
+    meeting = await db.meetings.findOne({where: {date: new Date(new Date().toDateString())}});
     if(meeting == null) {
         meeting = await db.meetings.create({});
     }
@@ -92,6 +92,6 @@ exports.scanID = async (req, res) => {
 
     res.send({
         name: foundStudent.name,
-        time: Date.now()
+        time: new Date().toLocaleTimeString()
     })
 }

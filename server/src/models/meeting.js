@@ -11,8 +11,7 @@ module.exports = async (sequelize, Sequelize) => {
         defaultValue: today,
         unique: true
       }
-    },
-    { timestamps: false }
+    }
   );
 
   return meeting;
