@@ -1,38 +1,54 @@
-import { useState } from "react";
 import Meta from '../components/Meta';
 import styles from '../styles/Home.module.css';
+import { useState } from 'react';
 
 export default function Home() {
+  const [scanEntry, setScanEntry] = useState('');
 
-  const [scanEntry, setScanEntry] = useState("");
-
-  const processScan = async e => {
+  const processScan = async (e) => {
     e.preventDefault();
+    let hasError = false;
+
     try {
+      const scanEntryBox = document.getElementById('scanEntryBox');
+      const errorAlert = document.getElementById('errorAlert');
+      const scanLog = document.getElementById('scanEntries');
+
+      if (scanEntryBox.value.length != 9 && scanEntryBox.value.length != 13) {
+        scanEntryBox.value = '';
+        errorAlert.innerHTML = 'Invalid ID length!';
+        return;
+      }
+
       // makes POST request to /api/scan
-      const body = { scanEntry }
+      const body = { scanEntry };
       const res = await fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
-      }).then(res => res.json());
+      }).then((res) => res.json());
 
-      const scanLog = document.getElementById("scanEntries")
+      if (res.hasOwnProperty('message')) {
+        // ID invalid
+        hasError = true;
+        errorAlert.innerHTML = res.message;
+      }
+
+      if (hasError) return;
 
       // notifies user of success
-      let newEntry = document.createElement("p");
-      newEntry.innerHTML = `<b>${res.name}</b> swiped in at <b>${new Date().toLocaleTimeString()}</b>`;
-      newEntry.style.margin = "2px";
+      const newEntry = document.createElement('p');
+      newEntry.innerHTML = `<b>${res.name}</b> swiped in at <b>${res.time}</b>`;
+      newEntry.style.margin = '2px';
       scanLog.appendChild(newEntry);
       scanLog.scrollTop = scanLog.scrollHeight;
 
       // clears input field
-      document.getElementById('scanEntryBox').value = ""
-
+      scanEntryBox.value = '';
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <>
@@ -46,25 +62,22 @@ export default function Home() {
             Please swipe your student ID card!
           </p>
 
+          <div id="errorAlert" className="alert alert-danger"></div>
+
           <div id="scanEntries" className={styles.scanLog}></div>
 
           <form id="scanForm" className={styles.form} onSubmit={processScan}>
             <input
               type="number"
-              id="scanEntryBox" 
+              id="scanEntryBox"
               className={styles.input}
               value={scanEntry}
-              onChange={e => setScanEntry(e.target.value)}
+              onChange={(e) => setScanEntry(e.target.value)}
             />
-            <button
-              type="submit"
-              className={styles.button}
-            >
+            <button type="submit" className={styles.button}>
               Submit
             </button>
           </form>
-
-          <a href="/register">Register Here</a>
         </main>
       </div>
     </>
