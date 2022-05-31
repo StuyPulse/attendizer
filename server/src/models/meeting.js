@@ -1,23 +1,17 @@
 const Sequelize = require('./database');
 
-module.exports = async (sequelizeInstance, Sequelize) => {
-  const meeting = await sequelizeInstance.define(
+module.exports = async (sequelize, Sequelize) => {
+  const today = new Date(new Date(Date.now()).toDateString());
+  const meeting = await sequelize.define(
     'meeting',
     {
-      Id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        unique: true
-      },
-      meetingDate: {
+      date: {
         // type: Sequelize.INTEGER,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATEONLY,
+        defaultValue: today,
         unique: true
       }
-    },
-    { timestamps: false }
+    }
   );
 
   return meeting;

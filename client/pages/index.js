@@ -22,7 +22,7 @@ export default function Home() {
 
       // makes POST request to /api/scan
       const body = { scanEntry };
-      const res = await fetch('/api/scan', {
+      const res = await fetch('http://localhost:4000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
