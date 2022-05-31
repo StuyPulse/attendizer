@@ -1,7 +1,6 @@
 const req = require('express/lib/request');
 const mysql = require('mysql2');
 const Sequelize = require('sequelize');
-const databaseConfig = require('../config/database_config.js');
 const sequelize = new Sequelize('sqlite://attendance.sqlite3');
 
 const students = require('./student.js')(sequelize, Sequelize);
