@@ -10,8 +10,7 @@ module.exports = async (sequelize, Sequelize) => {
       // meetingId: {
       //     type: Sequelize.INTEGER
       // }
-    },
-    { timestamps: false }
+    }
   );
   return entry;
 };
