@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const bodyParser = require('body-parser');
-    const interface = require("../utils/interfaces/studentInterface.js");
+    const interface = require("../utils/studentInterface.js");
 
     var router = require("express").Router();
 

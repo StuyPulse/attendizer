@@ -2,10 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dbinit = require('./src/models/database.js');
-app.use(cors());
-require('./src/routes/routes.js')(app);
+require('./src/utils/routes.js')(app);
 
-const testFuncs = require('./src/utils/interfaces/studentInterface.js');
+// const testFuncs = require('./src/utils/studentInterface.js');
 
 const port = process.env.PORT || 4000;
 

@@ -4,6 +4,10 @@ module.exports = async (sequelize, Sequelize) => {
   const entry = await sequelize.define(
     'entry',
     {
+      // scanIn: {
+      //   type: Sequelize.BOOLEAN,
+      //   primaryKey: true
+      // }
       // studentId: {
       //     type: Sequelize.INTEGER
       // },
