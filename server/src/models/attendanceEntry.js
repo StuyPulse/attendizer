@@ -4,16 +4,14 @@ module.exports = async (sequelize, Sequelize) => {
   const entry = await sequelize.define(
     'entry',
     {
-      // scanIn: {
-      //   type: Sequelize.BOOLEAN,
-      //   primaryKey: true
-      // }
-      // studentId: {
-      //     type: Sequelize.INTEGER
-      // },
-      // meetingId: {
-      //     type: Sequelize.INTEGER
-      // }
+      scannedOut: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      timeIn: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
+      }
     }
   );
   return entry;

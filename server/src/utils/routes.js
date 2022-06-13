@@ -1,14 +1,16 @@
 module.exports = (app) => {
     const bodyParser = require('body-parser');
-    const interface = require("../utils/studentInterface.js");
+
+    const addStudent = require("./interface/addStudent.js");
+    const scanIn = require("./interface/scanIn.js");
 
     var router = require("express").Router();
 
     router.get("/", (req, res) => {
         res.json("Welcome to Attendizer - Backend!!!");
     });
-    router.post("/reg", interface.addStudent);
-    router.post("/scan", interface.scanID);
+    router.post("/reg", addStudent);
+    router.post("/scan", scanIn);
 
     app.use(bodyParser.urlencoded({extended: false }));
     app.use(bodyParser.json());
