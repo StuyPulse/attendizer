@@ -3,50 +3,64 @@ const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const student = require('../../models/student.js');
 
-module.exports = async (req, res) => {
-  const db = await dbinit();
+exports.addOne = async (req, res) => {
+  students = req.body.students;
+
+  finalMessage = "";
+
   console.log(req.body);
-  if (!req.body.name) {
+
+  if (!req.body.students) {
     res.status(400).send({
-      message: 'Must need name!'
+      message: 'Array not sent!'
     });
     return;
   }
 
-  if (req.body.osis.toString().length != 9) {
-    res.status(400).send({
-      message: 'Student ID length invalid.'
-    });
-    return;
-  }
+  const db = await dbinit();
 
-  if (req.body.uid.toString().length != 13) {
-    res.status(400).send({
-      message: 'Student UID length invalid.'
-    });
-    return;
-  }
+  for(let i = 0; i<students.length; i++){
+    if (!students[i].name) {
+      res.status(400).send({
+        message: '[' + i + '] ' + 'Must need name!'
+      });
+      continue;
+    }
 
-  const newStudent = {
-    name: req.body.name,
-    osis: req.body.osis,
-    uid: req.body.uid
-  };
+    if (students[i].osis.toString().length != 9) {
+      res.status(400).send({
+        message: '[' + i + '] ' + 'Student ID length invalid.'
+      });
+      continue;
+    }
 
-  await db.students
+    if (students[i].uid.toString().length != 13) {
+      res.status(400).send({
+        message: '[' + i + '] ' + 'Student UID length invalid.'
+      });
+      continue;
+    }
+
+    const newStudent = {
+      name: students[i].name,
+      osis: students[i].osis,
+      uid: students[i].uid
+    };
+  
+    await db.students
     .create(newStudent, { fields: ['name', 'osis', 'uid'] })
     .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message +
-          ', likely due to this OSIS or UID already existing in the system.'
-      });
-      return;
+      finalMessage += i + ", ";
     });
+  }
 
-  res.status(200).send(
-    {
-      message: 'Student created successfully!'
-    }
-    );
+  if(finalMessage != ""){
+    res.status(500).send({
+      message: finalMessage + "Failed to load, likely due to these OSIS or UID already existing in the system. "
+    });
+  } else {
+    res.status(500).send({
+      message: "All students loaded!"
+    });
+  }
 };

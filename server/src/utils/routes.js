@@ -10,7 +10,7 @@ module.exports = (app) => {
     router.get("/", (req, res) => {
         res.json("Welcome to Attendizer - Backend!!!");
     });
-    router.post("/reg", addStudent);
+    router.post("/reg", addStudent.addOne);
     router.post("/scan", scanIn);
     router.get("/sList", getStudents);
 
