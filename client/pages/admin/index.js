@@ -27,6 +27,7 @@ export default function Home() {
             </thead>
 
             <tbody id="studentTableBody">
+              {/* TODO: Use IDs from database to enumerate StudentEntries */}
               <StudentEntry
                 id="0"
                 name="John Doe"

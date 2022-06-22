@@ -1,8 +1,11 @@
+import Button from 'react-bootstrap/Button';
+import StudentEntryModal from './StudentEntryModal';
+import { useState } from 'react';
+
 export default function StudentEntry(props) {
-  const editStudent = () => {
-    // TODO: Specific row to edit
-    console.log('h');
-  };
+  const [show, setShow] = useState(false);
+  const showModal = () => setShow(true);
+  const closeModal = () => setShow(false);
 
   return (
     <tr id={props.id}>
@@ -11,9 +14,15 @@ export default function StudentEntry(props) {
       <td>{props.uid}</td>
 
       <td>
-        <button onClick={editStudent} className="btn btn-secondary">
+        <Button variant="outline-primary" onClick={showModal}>
           Edit
-        </button>
+        </Button>
+        {/* Generates a modal for every student (kinda inefficient) */}
+        <StudentEntryModal
+          show={show}
+          closeModal={closeModal}
+          student={props}
+        />
       </td>
     </tr>
   );
