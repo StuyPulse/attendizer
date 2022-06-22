@@ -11,7 +11,7 @@ const port = process.env.PORT || 4000;
 
 (async () => {
   const db = await dbinit();
-  await db.sequelize.sync({ force: true });
+  await db.sequelize.sync({ force: true }, { alter: false });
 })();
 
 app.listen(port, () => {

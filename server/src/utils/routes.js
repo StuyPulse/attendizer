@@ -3,6 +3,7 @@ module.exports = (app) => {
 
     const addStudent = require("./interface/addStudent.js");
     const scanIn = require("./interface/scanIn.js");
+    const getStudents = require("./interface/getStudents.js");
 
     var router = require("express").Router();
 
@@ -11,6 +12,7 @@ module.exports = (app) => {
     });
     router.post("/reg", addStudent);
     router.post("/scan", scanIn);
+    router.get("/sList", getStudents);
 
     app.use(bodyParser.urlencoded({extended: false }));
     app.use(bodyParser.json());
