@@ -9,6 +9,7 @@ export default function StudentEntryModal(props) {
     // TODO: Send req to server to update data
 
     // Update table
+    props.refresh();
 
     // Close the modal
     closeModal();
@@ -49,10 +50,10 @@ export default function StudentEntryModal(props) {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="outline-danger" onClick={closeModal}>
+        <Button variant="danger" onClick={closeModal}>
           Close
         </Button>
-        <Button variant="outline-primary" onClick={updateStudent}>
+        <Button variant="primary" onClick={updateStudent}>
           Save
         </Button>
       </Modal.Footer>

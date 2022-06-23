@@ -8,7 +8,7 @@ export default function StudentEntry(props) {
   const closeModal = () => setShow(false);
 
   return (
-    <tr id={props.id}>
+    <tr key={props.id}>
       <td>{props.name}</td>
       <td>{props.osis}</td>
       <td>{props.uid}</td>
@@ -22,6 +22,7 @@ export default function StudentEntry(props) {
           show={show}
           closeModal={closeModal}
           student={props}
+          refresh={props.refresh}
         />
       </td>
     </tr>
