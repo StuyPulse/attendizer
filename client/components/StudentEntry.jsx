@@ -21,6 +21,7 @@ export default function StudentEntry(props) {
         <StudentEntryModal
           show={show}
           closeModal={closeModal}
+          action="Edit"
           student={props}
           refresh={props.refresh}
         />

@@ -1,24 +1,59 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { useState } from 'react';
 
 export default function StudentEntryModal(props) {
-  const { show, closeModal } = props;
+  const { show, closeModal, action, refresh, student } = props;
 
-  const updateStudent = () => {
-    // TODO: Send req to server to update data
+  const saveAction = async (e) => {
+    e.preventDefault();
+
+    // Choose the corresponding URL for the action Add or Edit
+    const url = action === 'Add' ? process.env.REG_URL : 'edit link here';
+
+    // Send a POST request to the server
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        students: [{ name: nameValue, osis: osisValue, uid: uidValue }]
+      })
+    });
 
     // Update table
-    props.refresh();
+    refresh();
+
+    // Clear form
+    setNameValue('');
+    setOsisValue('');
+    setUidValue('');
 
     // Close the modal
     closeModal();
   };
 
+  // Empty values if no student is passed in
+  let name = '';
+  let osis = '';
+  let uid = '';
+
+  // If a student is passed in, set the values to the student's values
+  if (student !== undefined) {
+    name = student.name;
+    osis = student.osis;
+    uid = student.uid;
+  }
+
+  // State variables for the form controls
+  const [nameValue, setNameValue] = useState(name);
+  const [osisValue, setOsisValue] = useState(osis);
+  const [uidValue, setUidValue] = useState(uid);
+
   return (
     <Modal show={show} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Student</Modal.Title>
+        <Modal.Title>{action} Student</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -27,7 +62,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              defaultValue={props.student.name}
+              value={nameValue}
+              onChange={(e) => setNameValue(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
@@ -35,7 +71,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>OSIS</Form.Label>
             <Form.Control
               type="number"
-              defaultValue={props.student.osis}
+              value={osisValue}
+              onChange={(e) => setOsisValue(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
@@ -43,7 +80,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>UID</Form.Label>
             <Form.Control
               type="number"
-              defaultValue={props.student.uid}
+              value={uidValue}
+              onChange={(e) => setUidValue(e.target.value)}
             ></Form.Control>
           </Form.Group>
         </Form>
@@ -53,7 +91,7 @@ export default function StudentEntryModal(props) {
         <Button variant="danger" onClick={closeModal}>
           Close
         </Button>
-        <Button variant="primary" onClick={updateStudent}>
+        <Button variant="primary" onClick={saveAction}>
           Save
         </Button>
       </Modal.Footer>

@@ -1,14 +1,16 @@
 import Button from 'react-bootstrap/Button';
 import Meta from '../components/Meta';
 import StudentEntry from '../components/StudentEntry';
+import StudentEntryModal from '../components/StudentEntryModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export async function getServerSideProps() {
-  // Fetches all students from backend
+  // Fetch all students from backend
   const res = await fetch(process.env.GET_URL);
-  const students = (await res.json()).students;
+  const students = await res.json();
 
   return { props: { students } };
 }
@@ -19,10 +21,10 @@ export default function Admin({ students }) {
     router.replace(router.asPath);
   };
 
-  const addStudent = () => {
-    const studentTableBody = document.getElementById('studentTableBody');
-    // TODO: finish
-  };
+  // Modal states
+  const [addShow, setAddShow] = useState(false);
+  const showAddModal = () => setAddShow(true);
+  const closeAddModal = () => setAddShow(false);
 
   return (
     <>
@@ -55,11 +57,19 @@ export default function Admin({ students }) {
             </tbody>
           </Table>
 
-          <Button variant="primary" onClick={addStudent}>
+          {/* Add student */}
+          <Button variant="primary" onClick={showAddModal}>
             Add Student
           </Button>
-          {/* localhost:4000/reg?name=a&osis=1&uid=1 */}
+          <StudentEntryModal
+            show={addShow}
+            closeModal={closeAddModal}
+            action="Add"
+            refresh={refreshData}
+          />
+
           <br />
+
           <Button variant="primary">Export as CSV</Button>
         </main>
       </div>
