@@ -21,11 +21,61 @@ export default function Admin({ students }) {
     router.replace(router.asPath);
   };
 
-  // Modal states
+  // Add modal states
   const [addShow, setAddShow] = useState(false);
-  const showAddModal = () => setAddShow(true);
-  const closeAddModal = () => setAddShow(false);
 
+  const [addName, setAddName] = useState('');
+  const [addOsis, setAddOsis] = useState('');
+  const [addUid, setAddUid] = useState('');
+
+  const addFormStates = {
+    name: addName,
+    setName: setAddName,
+    osis: addOsis,
+    setOsis: setAddOsis,
+    uid: addUid,
+    setUid: setAddUid
+  };
+
+  const showAddModal = () => setAddShow(true);
+  const closeAddModal = () => {
+    setAddShow(false);
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
+  };
+
+  // Edit modal states
+  const [editShow, setEditShow] = useState(false);
+
+  const [editName, setEditName] = useState('');
+  const [editOsis, setEditOsis] = useState('');
+  const [editUid, setEditUid] = useState('');
+
+  const editFormStates = {
+    name: editName,
+    setName: setEditName,
+    osis: editOsis,
+    setOsis: setEditOsis,
+    uid: editUid,
+    setUid: setEditUid
+  };
+
+  const showEditModal = (e) => {
+    setEditShow(true);
+
+    // Get student data based on database id (might not be accurate)
+    const editingStudent = students[e.target.id - 1];
+
+    setEditName(editingStudent.name);
+    setEditOsis(editingStudent.osis);
+    setEditUid(editingStudent.uid);
+  };
+  const closeEditModal = () => setEditShow(false);
+
+  // Rendered page
   return (
     <>
       <Meta title="Admin Panel" />
@@ -48,16 +98,17 @@ export default function Admin({ students }) {
               {students.map((student) => (
                 <StudentEntry
                   key={student.id}
+                  id={student.id}
                   name={student.name}
                   osis={student.osis}
                   uid={student.uid}
-                  refresh={refreshData}
+                  show={showEditModal}
                 />
               ))}
             </tbody>
           </Table>
 
-          {/* Add student */}
+          {/* Add student modal */}
           <Button variant="primary" onClick={showAddModal}>
             Add Student
           </Button>
@@ -66,6 +117,16 @@ export default function Admin({ students }) {
             closeModal={closeAddModal}
             action="Add"
             refresh={refreshData}
+            formStates={addFormStates}
+          />
+
+          {/* Edit student modal */}
+          <StudentEntryModal
+            show={editShow}
+            closeModal={closeEditModal}
+            action="Edit"
+            refresh={refreshData}
+            formStates={editFormStates}
           />
 
           <br />

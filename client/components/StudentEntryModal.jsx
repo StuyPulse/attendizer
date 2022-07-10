@@ -1,10 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useState } from 'react';
 
 export default function StudentEntryModal(props) {
-  const { show, closeModal, action, refresh, student } = props;
+  const { show, closeModal, action, refresh, formStates } = props;
 
   const saveAction = async (e) => {
     e.preventDefault();
@@ -17,7 +16,9 @@ export default function StudentEntryModal(props) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        students: [{ name: nameValue, osis: osisValue, uid: uidValue }]
+        students: [
+          { name: formStates.name, osis: formStates.osis, uid: formStates.uid }
+        ]
       })
     });
 
@@ -25,30 +26,13 @@ export default function StudentEntryModal(props) {
     refresh();
 
     // Clear form
-    setNameValue('');
-    setOsisValue('');
-    setUidValue('');
+    formStates.setName('');
+    formStates.setOsis('');
+    formStates.setUid('');
 
     // Close the modal
     closeModal();
   };
-
-  // Empty values if no student is passed in
-  let name = '';
-  let osis = '';
-  let uid = '';
-
-  // If a student is passed in, set the values to the student's values
-  if (student !== undefined) {
-    name = student.name;
-    osis = student.osis;
-    uid = student.uid;
-  }
-
-  // State variables for the form controls
-  const [nameValue, setNameValue] = useState(name);
-  const [osisValue, setOsisValue] = useState(osis);
-  const [uidValue, setUidValue] = useState(uid);
 
   return (
     <Modal show={show} onHide={closeModal}>
@@ -62,8 +46,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              value={nameValue}
-              onChange={(e) => setNameValue(e.target.value)}
+              value={formStates.name}
+              onChange={(e) => formStates.setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
@@ -71,8 +55,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>OSIS</Form.Label>
             <Form.Control
               type="number"
-              value={osisValue}
-              onChange={(e) => setOsisValue(e.target.value)}
+              value={formStates.osis}
+              onChange={(e) => formStates.setOsis(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
@@ -80,8 +64,8 @@ export default function StudentEntryModal(props) {
             <Form.Label>UID</Form.Label>
             <Form.Control
               type="number"
-              value={uidValue}
-              onChange={(e) => setUidValue(e.target.value)}
+              value={formStates.uid}
+              onChange={(e) => formStates.setUid(e.target.value)}
             ></Form.Control>
           </Form.Group>
         </Form>

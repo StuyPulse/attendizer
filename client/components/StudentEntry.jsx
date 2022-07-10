@@ -1,30 +1,18 @@
 import Button from 'react-bootstrap/Button';
-import StudentEntryModal from './StudentEntryModal';
-import { useState } from 'react';
 
 export default function StudentEntry(props) {
-  const [show, setShow] = useState(false);
-  const showModal = () => setShow(true);
-  const closeModal = () => setShow(false);
+  const { id, name, osis, uid, show } = props;
 
   return (
-    <tr key={props.id}>
-      <td>{props.name}</td>
-      <td>{props.osis}</td>
-      <td>{props.uid}</td>
+    <tr>
+      <td>{name}</td>
+      <td>{osis}</td>
+      <td>{uid}</td>
 
       <td>
-        <Button variant="outline-primary" onClick={showModal}>
+        <Button id={id} variant="outline-primary" onClick={show}>
           Edit
         </Button>
-        {/* Generates a modal for every student (kinda inefficient) */}
-        <StudentEntryModal
-          show={show}
-          closeModal={closeModal}
-          action="Edit"
-          student={props}
-          refresh={props.refresh}
-        />
       </td>
     </tr>
   );
