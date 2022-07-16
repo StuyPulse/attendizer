@@ -48,7 +48,7 @@ export default function StudentEntryModal(props) {
               type="text"
               value={formStates.name}
               onChange={(e) => formStates.setName(e.target.value)}
-            ></Form.Control>
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="osis">
@@ -57,7 +57,7 @@ export default function StudentEntryModal(props) {
               type="number"
               value={formStates.osis}
               onChange={(e) => formStates.setOsis(e.target.value)}
-            ></Form.Control>
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="uid">
@@ -66,7 +66,7 @@ export default function StudentEntryModal(props) {
               type="number"
               value={formStates.uid}
               onChange={(e) => formStates.setUid(e.target.value)}
-            ></Form.Control>
+            />
           </Form.Group>
         </Form>
       </Modal.Body>

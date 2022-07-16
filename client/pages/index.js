@@ -1,52 +1,44 @@
+import ErrorToast from '../components/ErrorToast';
+import Form from 'react-bootstrap/Form';
 import Meta from '../components/Meta';
+import ScanEntry from '../components/ScanEntry';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 import styles from '../styles/Home.module.css';
 import { useState } from 'react';
 
 export default function Home() {
+  // Value of the scan input field
   const [scanEntry, setScanEntry] = useState('');
+
+  // The list of successful scans and errors displayed on the page
+  const [scanEntries, setScanEntries] = useState([]);
+  const [errorToasts, setErrorToasts] = useState([]);
 
   const processScan = async (e) => {
     e.preventDefault();
-    let hasError = false;
 
-    try {
-      const scanEntryBox = document.getElementById('scanEntryBox');
-      const errorAlert = document.getElementById('errorAlert');
+    // Send a POST request to the server
+    const res = await fetch(process.env.SCAN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scanEntry: scanEntry })
+    });
+
+    // Get the response body
+    const body = await res.json();
+
+    // Clear form
+    setScanEntry('');
+
+    // Display results
+    if (res.ok) {
+      setScanEntries([...scanEntries, body]);
+
+      // Scroll to bottom of log
       const scanLog = document.getElementById('scanEntries');
-
-      if (scanEntryBox.value.length != 9 && scanEntryBox.value.length != 13) {
-        scanEntryBox.value = '';
-        errorAlert.innerHTML = 'Invalid ID length!';
-        return;
-      }
-
-      // makes POST request to /api/scan
-      const body = { scanEntry };
-      const res = await fetch(process.env.SCAN_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      }).then((res) => res.json());
-
-      if (res.hasOwnProperty('message')) {
-        // ID invalid
-        hasError = true;
-        errorAlert.innerHTML = res.message;
-      }
-
-      if (hasError) return;
-
-      // notifies user of success
-      const newEntry = document.createElement('p');
-      newEntry.innerHTML = `<b>${res.name}</b> swiped in at <b>${res.time}</b>`;
-      newEntry.style.margin = '2px';
-      scanLog.appendChild(newEntry);
       scanLog.scrollTop = scanLog.scrollHeight;
-
-      // clears input field
-      scanEntryBox.value = '';
-    } catch (error) {
-      console.error(error);
+    } else {
+      setErrorToasts([...errorToasts, body.message]);
     }
   };
 
@@ -62,22 +54,25 @@ export default function Home() {
             Please swipe your student ID card!
           </p>
 
-          <div id="errorAlert" className="alert alert-danger"></div>
+          <div id="scanEntries" className={styles.scanLog}>
+            {scanEntries.map((entry, index) => (
+              <ScanEntry key={index} name={entry.name} time={entry.time} />
+            ))}
+          </div>
 
-          <div id="scanEntries" className={styles.scanLog}></div>
-
-          <form id="scanForm" className={styles.form} onSubmit={processScan}>
-            <input
+          <Form onSubmit={processScan}>
+            <Form.Control
               type="number"
-              id="scanEntryBox"
-              className={styles.input}
               value={scanEntry}
               onChange={(e) => setScanEntry(e.target.value)}
             />
-            <button type="submit" className={styles.button}>
-              Submit
-            </button>
-          </form>
+          </Form>
+
+          <ToastContainer position="top-end" className="p-3">
+            {errorToasts.map((errorToast, index) => (
+              <ErrorToast key={index} message={errorToast} />
+            ))}
+          </ToastContainer>
         </main>
       </div>
     </>
