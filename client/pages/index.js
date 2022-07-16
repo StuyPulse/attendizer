@@ -1,10 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
+
 import ErrorToast from '../components/ErrorToast';
 import Form from 'react-bootstrap/Form';
 import Meta from '../components/Meta';
 import ScanEntry from '../components/ScanEntry';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import styles from '../styles/Home.module.css';
-import { useState } from 'react';
 
 export default function Home() {
   // Value of the scan input field
@@ -13,6 +14,13 @@ export default function Home() {
   // The list of successful scans and errors displayed on the page
   const [scanEntries, setScanEntries] = useState([]);
   const [errorToasts, setErrorToasts] = useState([]);
+
+  // Scroll to bottom of scan entries log when new entries are added
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [scanEntries]);
 
   const processScan = async (e) => {
     e.preventDefault();
@@ -33,10 +41,6 @@ export default function Home() {
     // Display results
     if (res.ok) {
       setScanEntries([...scanEntries, body]);
-
-      // Scroll to bottom of log
-      const scanLog = document.getElementById('scanEntries');
-      scanLog.scrollTop = scanLog.scrollHeight;
     } else {
       setErrorToasts([...errorToasts, body.message]);
     }
@@ -54,13 +58,15 @@ export default function Home() {
             Please swipe your student ID card!
           </p>
 
-          <div id="scanEntries" className={styles.scanLog}>
+          <div className={styles.scanLog}>
             {scanEntries.map((entry, index) => (
               <ScanEntry key={index} name={entry.name} time={entry.time} />
             ))}
+
+            <div ref={scrollRef} />
           </div>
 
-          <Form onSubmit={processScan}>
+          <Form onSubmit={processScan} className="p-3">
             <Form.Control
               type="number"
               value={scanEntry}
