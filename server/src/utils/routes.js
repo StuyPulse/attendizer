@@ -2,6 +2,7 @@ module.exports = (app) => {
     const bodyParser = require('body-parser');
 
     const addStudent = require("./interface/addStudent.js");
+    const editStudent = require("./interface/editStudent.js");
     const scanIn = require("./interface/scanIn.js");
     const getStudents = require("./interface/getStudents.js");
 
@@ -11,6 +12,7 @@ module.exports = (app) => {
         res.json("Welcome to Attendizer - Backend!!!");
     });
     router.post("/reg", addStudent.addOne);
+    router.post("/edit", editStudent);
     router.post("/scan", scanIn);
     router.get("/sList", getStudents);
 
