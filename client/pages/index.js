@@ -1,48 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
-
-import ErrorToast from '../components/ErrorToast';
-import Form from 'react-bootstrap/Form';
 import Meta from '../components/Meta';
-import ScanEntry from '../components/ScanEntry';
-import ToastContainer from 'react-bootstrap/ToastContainer';
 import styles from '../styles/Home.module.css';
+import { useState } from 'react';
 
 export default function Home() {
-  // Value of the scan input field
   const [scanEntry, setScanEntry] = useState('');
-
-  // The list of successful scans and errors displayed on the page
-  const [scanEntries, setScanEntries] = useState([]);
-  const [errorToasts, setErrorToasts] = useState([]);
-
-  // Scroll to bottom of scan entries log when new entries are added
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [scanEntries]);
 
   const processScan = async (e) => {
     e.preventDefault();
+    let hasError = false;
 
-    // Send a POST request to the server
-    const res = await fetch(process.env.SCAN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scanEntry: scanEntry })
-    });
+    try {
+      const scanEntryBox = document.getElementById('scanEntryBox');
+      const errorAlert = document.getElementById('errorAlert');
+      const scanLog = document.getElementById('scanEntries');
 
-    // Get the response body
-    const body = await res.json();
+      if (scanEntryBox.value.length != 9 && scanEntryBox.value.length != 13) {
+        scanEntryBox.value = '';
+        errorAlert.innerHTML = 'Invalid ID length!';
+        return;
+      }
 
-    // Clear form
-    setScanEntry('');
+      // makes POST request to /api/scan
+      const body = { scanEntry };
+      const res = await fetch('http://localhost:4000/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }).then((res) => res.json());
 
-    // Display results
-    if (res.ok) {
-      setScanEntries([...scanEntries, body]);
-    } else {
-      setErrorToasts([...errorToasts, body.message]);
+      if (res.hasOwnProperty('message')) {
+        // ID invalid
+        hasError = true;
+        errorAlert.innerHTML = res.message;
+      }
+
+      if (hasError) return;
+
+      // notifies user of success
+      const newEntry = document.createElement('p');
+      newEntry.innerHTML = `<b>${res.name}</b> swiped in at <b>${res.time}</b>`;
+      newEntry.style.margin = '2px';
+      scanLog.appendChild(newEntry);
+      scanLog.scrollTop = scanLog.scrollHeight;
+
+      // clears input field
+      scanEntryBox.value = '';
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -58,27 +62,22 @@ export default function Home() {
             Please swipe your student ID card!
           </p>
 
-          <div className={styles.scanLog}>
-            {scanEntries.map((entry, index) => (
-              <ScanEntry key={index} name={entry.name} time={entry.time} />
-            ))}
+          <div id="errorAlert" className="alert alert-danger"></div>
 
-            <div ref={scrollRef} />
-          </div>
+          <div id="scanEntries" className={styles.scanLog}></div>
 
-          <Form onSubmit={processScan} className="p-3">
-            <Form.Control
+          <form id="scanForm" className={styles.form} onSubmit={processScan}>
+            <input
               type="number"
+              id="scanEntryBox"
+              className={styles.input}
               value={scanEntry}
               onChange={(e) => setScanEntry(e.target.value)}
             />
-          </Form>
-
-          <ToastContainer position="top-end" className="p-3">
-            {errorToasts.map((errorToast, index) => (
-              <ErrorToast key={index} message={errorToast} />
-            ))}
-          </ToastContainer>
+            <button type="submit" className={styles.button}>
+              Submit
+            </button>
+          </form>
         </main>
       </div>
     </>
