@@ -5,31 +5,41 @@ const student = require('../../models/student.js');
 
 module.exports = async (req, res) => {
   const db = await dbinit();
-  console.log(req.body);
-  if (!req.body.name) {
+
+  editedStudent = req.body.students[0];
+
+  console.log(editedStudent);
+
+  if (!editedStudent.name) {
     res.status(400).send({
       message: 'Must need name!'
     });
+
+    console.log("test1 passed");
     return;
   }
 
-  if (req.body.osis.toString().length != 9) {
+  if (editedStudent.osis.toString().length != 9) {
     res.status(400).send({
       message: 'Student ID length invalid.'
     });
+
+    console.log("test2 passed");
     return;
   }
 
-  if (req.body.uid.toString().length != 13) {
+  if (editedStudent.uid.toString().length != 13) {
     res.status(400).send({
       message: 'Student UID length invalid.'
     });
+
+    console.log("test3 passed");
     return;
   }
 
-  const updatedStudent = db.students.findOne({
+  const updatedStudent = await db.students.findOne({
     where: {
-      id: req.id
+      id: editedStudent.id
     }
   });
 
@@ -41,10 +51,14 @@ module.exports = async (req, res) => {
   }
 
   updatedStudent.set({
-    name: req.body.name,
-    osis: req.body.osis,
-    uid: req.body.uid
+    name: editedStudent.name,
+    osis: editedStudent.osis,
+    uid: editedStudent.uid
   });
 
   await updatedStudent.save();
+
+  res.status(500).send({
+    message: "Finishes!"
+  });
 };

@@ -5,6 +5,7 @@ export default function StudentEntry(props) {
 
   return (
     <tr>
+      <td>{id}</td>
       <td>{name}</td>
       <td>{osis}</td>
       <td>{uid}</td>

@@ -9,8 +9,7 @@ exports.addOne = async (req, res) => {
   finalMessage = "";
 
   console.log(req.body);
-
-  if (!req.body.students) {
+  if (!req.body.students[0].name) {
     res.status(400).send({
       message: 'Array not sent!'
     });

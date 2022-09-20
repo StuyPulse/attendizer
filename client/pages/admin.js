@@ -53,6 +53,7 @@ export default function Admin({ students }) {
   const [editName, setEditName] = useState('');
   const [editOsis, setEditOsis] = useState('');
   const [editUid, setEditUid] = useState('');
+  const [editId, setEditId] = useState('');
 
   const editFormStates = {
     name: editName,
@@ -60,7 +61,9 @@ export default function Admin({ students }) {
     osis: editOsis,
     setOsis: setEditOsis,
     uid: editUid,
-    setUid: setEditUid
+    setUid: setEditUid,
+    id: editId,
+    setId: setEditId
   };
 
   const showEditModal = (e) => {
@@ -72,6 +75,7 @@ export default function Admin({ students }) {
     setEditName(editingStudent.name);
     setEditOsis(editingStudent.osis);
     setEditUid(editingStudent.uid);
+    setEditId(editingStudent.id);
   };
   const closeEditModal = () => setEditShow(false);
 
@@ -87,6 +91,7 @@ export default function Admin({ students }) {
           <Table>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>OSIS</th>
                 <th>UID</th>

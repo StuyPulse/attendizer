@@ -9,17 +9,24 @@ export default function StudentEntryModal(props) {
     e.preventDefault();
 
     // Choose the corresponding URL for the action Add or Edit
-    const url = action === 'Add' ? process.env.REG_URL : 'edit link here';
+    // const url = action === 'Add' ? process.env.REG_URL : process.env.EDIT_URL;
+    const url = action === 'Edit' ? process.env.EDIT_URL : process.env.REG_URL;
 
     // Send a POST request to the server
+    const studentObject = {
+      name: formStates.name,
+      osis: formStates.osis,
+      uid: formStates.uid
+    };
+
+    if (action === 'Edit') {
+      studentObject.id = formStates.id;
+    }
+
     await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        students: [
-          { name: formStates.name, osis: formStates.osis, uid: formStates.uid }
-        ]
-      })
+      body: JSON.stringify({ students: [studentObject] })
     });
 
     // Update table
@@ -42,6 +49,14 @@ export default function StudentEntryModal(props) {
 
       <Modal.Body>
         <Form>
+          <Form.Group className="mb-3" controlId="name">
+            <Form.Label>ID</Form.Label>
+            <Form.Control
+              type="text"
+              value={formStates.id}
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
