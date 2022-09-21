@@ -20,23 +20,17 @@ exports.addOne = async (req, res) => {
 
   for(let i = 0; i<students.length; i++){
     if (!students[i].name) {
-      res.status(400).send({
-        message: '[' + i + '] ' + 'Must need name!'
-      });
+      finalMessage += '[' + i + '] ' + 'Must need name!\n'
       continue;
     }
 
     if (students[i].osis.toString().length != 9) {
-      res.status(400).send({
-        message: '[' + i + '] ' + 'Student ID length invalid.'
-      });
+      finalMessage += '[' + i + '] ' + 'Student ID length invalid.\n'
       continue;
     }
 
     if (students[i].uid.toString().length != 13) {
-      res.status(400).send({
-        message: '[' + i + '] ' + 'Student UID length invalid.'
-      });
+      finalMessage += '[' + i + '] ' + 'Student UID length invalid.\n'
       continue;
     }
 
