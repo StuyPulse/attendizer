@@ -4,6 +4,8 @@ import StudentEntry from '../components/StudentEntry';
 import StudentEntryModal from '../components/StudentEntryModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
+import ErrorToast from '../components/ErrorToast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -22,6 +24,8 @@ export default function Admin({ students }) {
   };
 
   // Add modal states
+  const [errorToasts, setErrorToasts] = useState([]);
+
   const [addShow, setAddShow] = useState(false);
 
   const [addName, setAddName] = useState('');
@@ -34,7 +38,9 @@ export default function Admin({ students }) {
     osis: addOsis,
     setOsis: setAddOsis,
     uid: addUid,
-    setUid: setAddUid
+    setUid: setAddUid,
+    error: errorToasts,
+    setError: setErrorToasts
   };
 
   const showAddModal = () => setAddShow(true);
@@ -63,7 +69,9 @@ export default function Admin({ students }) {
     uid: editUid,
     setUid: setEditUid,
     id: editId,
-    setId: setEditId
+    setId: setEditId,
+    error: errorToasts,
+    setError: setErrorToasts
   };
 
   const showEditModal = (e) => {
@@ -73,8 +81,8 @@ export default function Admin({ students }) {
     const editingStudent = students[e.target.id - 1];
 
     setEditName(editingStudent.name);
-    setEditOsis(editingStudent.osis);
-    setEditUid(editingStudent.uid);
+    setEditOsis("0".repeat(9 - editingStudent.osis.toString().length) + editingStudent.osis);
+    setEditUid("0".repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid);
     setEditId(editingStudent.id);
   };
   const closeEditModal = () => setEditShow(false);
@@ -105,8 +113,8 @@ export default function Admin({ students }) {
                   key={student.id}
                   id={student.id}
                   name={student.name}
-                  osis={student.osis}
-                  uid={student.uid}
+                  osis={"0".repeat(9 - student.osis.toString().length) + student.osis}
+                  uid={"0".repeat(13 - student.uid.toString().length) + student.uid}
                   show={showEditModal}
                 />
               ))}
@@ -137,6 +145,12 @@ export default function Admin({ students }) {
           <br />
 
           <Button variant="primary">Export as CSV</Button>
+
+          <ToastContainer position="top-end" className="p-3">
+            {errorToasts.map((errorToast, index) => (
+              <ErrorToast key={index} message={errorToast} />
+            ))}
+          </ToastContainer>
         </main>
       </div>
     </>

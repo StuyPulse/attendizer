@@ -20,7 +20,7 @@ exports.addOne = async (req, res) => {
 
   for(let i = 0; i<students.length; i++){
     if (!students[i].name) {
-      finalMessage += '[' + i + '] ' + 'Must need name!\n'
+      finalMessage += '[' + i + '] ' + 'No name.\n'
       continue;
     }
 
@@ -43,16 +43,16 @@ exports.addOne = async (req, res) => {
     await db.students
     .create(newStudent, { fields: ['name', 'osis', 'uid'] })
     .catch((err) => {
-      finalMessage += i + ", ";
+      finalMessage += '[' + i + '] ' + "Failed to load, likely due to this OSIS or UID already existing in the system. ";
     });
   }
 
   if(finalMessage != ""){
     res.status(500).send({
-      message: finalMessage + "Failed to load, likely due to these OSIS or UID already existing in the system. "
+      message: finalMessage
     });
   } else {
-    res.status(500).send({
+    res.send({
       message: "All students loaded!"
     });
   }

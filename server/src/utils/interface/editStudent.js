@@ -14,8 +14,6 @@ module.exports = async (req, res) => {
     res.status(400).send({
       message: 'Must need name!'
     });
-
-    console.log("test1 passed");
     return;
   }
 
@@ -23,8 +21,6 @@ module.exports = async (req, res) => {
     res.status(400).send({
       message: 'Student ID length invalid.'
     });
-
-    console.log("test2 passed");
     return;
   }
 
@@ -32,8 +28,6 @@ module.exports = async (req, res) => {
     res.status(400).send({
       message: 'Student UID length invalid.'
     });
-
-    console.log("test3 passed");
     return;
   }
 

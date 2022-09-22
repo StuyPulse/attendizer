@@ -1,5 +1,7 @@
 import Button from 'react-bootstrap/Button';
 
+// Display for each entry 
+
 export default function StudentEntry(props) {
   const { id, name, osis, uid, show } = props;
 

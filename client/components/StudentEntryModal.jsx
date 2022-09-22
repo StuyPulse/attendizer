@@ -23,22 +23,28 @@ export default function StudentEntryModal(props) {
       studentObject.id = formStates.id;
     }
 
-    await fetch(url, {
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ students: [studentObject] })
     });
 
+    const body = await res.json()
+
     // Update table
     refresh();
 
-    // Clear form
-    formStates.setName('');
-    formStates.setOsis('');
-    formStates.setUid('');
+    if (res.ok) {
+      // Clear form
+      formStates.setName('');
+      formStates.setOsis('');
+      formStates.setUid('');
 
-    // Close the modal
-    closeModal();
+      // Close the modal
+      closeModal();
+    } else {
+      formStates.setError([...formStates.error, body.message]);
+    }
   };
 
   return (
@@ -49,14 +55,6 @@ export default function StudentEntryModal(props) {
 
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="name">
-            <Form.Label>ID</Form.Label>
-            <Form.Control
-              type="text"
-              value={formStates.id}
-            />
-          </Form.Group>
-
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
