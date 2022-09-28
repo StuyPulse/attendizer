@@ -5,8 +5,9 @@ const student = require('../../models/student.js');
 
 module.exports = async (req, res) => {
   const db = await dbinit();
+  // Grabs all students from the database.
+  // Raw tells it to grab all information, including meetings attended.
   const students = await db.students.findAll({raw : true});
-  // console.log(students);
   if(students != null){
     res.send(students);
     return;
@@ -14,9 +15,4 @@ module.exports = async (req, res) => {
   res.status(500).send({
     message: "Could not fetch students!"
   })
-  // res.status(200).send(
-  // {
-  //   message: 'Students printed!'
-  // }
-  // );
 };

@@ -3,20 +3,18 @@ const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const student = require('../../models/student.js');
 
-exports.addOne = async (req, res) => {
+module.exports = async (req, res) => {
   students = req.body.students;
 
+  // This is used to avoid errors with changing the result after sending it.
   finalMessage = "";
 
-  console.log(req.body);
-  if (!req.body.students[0].name) {
-    res.status(400).send({
-      message: 'Array not sent!'
-    });
-    return;
-  }
+  // console.log(req.body);
 
   const db = await dbinit();
+
+  // Loops through an array of students, checking if their information is correctly formatted.
+  // This will then add that student to the database.
 
   for(let i = 0; i<students.length; i++){
     if (!students[i].name) {
@@ -47,6 +45,7 @@ exports.addOne = async (req, res) => {
     });
   }
 
+  // Returns errors, or if there are no errors, sends back a positive result.
   if(finalMessage != ""){
     res.status(500).send({
       message: finalMessage
