@@ -23,14 +23,23 @@ export default function Admin({ students }) {
     router.replace(router.asPath);
   };
 
-  // Add modal states
+  // Error modal state
   const [errorToasts, setErrorToasts] = useState([]);
 
+  // Add modal states
   const [addShow, setAddShow] = useState(false);
 
   const [addName, setAddName] = useState('');
   const [addOsis, setAddOsis] = useState('');
   const [addUid, setAddUid] = useState('');
+
+  // Edit modal states
+  const [editShow, setEditShow] = useState(false);
+
+  const [editName, setEditName] = useState('');
+  const [editOsis, setEditOsis] = useState('');
+  const [editUid, setEditUid] = useState('');
+  const [editId, setEditId] = useState('');
 
   const addFormStates = {
     name: addName,
@@ -43,24 +52,6 @@ export default function Admin({ students }) {
     setError: setErrorToasts
   };
 
-  const showAddModal = () => setAddShow(true);
-  const closeAddModal = () => {
-    setAddShow(false);
-
-    // Clear form
-    setAddName('');
-    setAddOsis('');
-    setAddUid('');
-  };
-
-  // Edit modal states
-  const [editShow, setEditShow] = useState(false);
-
-  const [editName, setEditName] = useState('');
-  const [editOsis, setEditOsis] = useState('');
-  const [editUid, setEditUid] = useState('');
-  const [editId, setEditId] = useState('');
-
   const editFormStates = {
     name: editName,
     setName: setEditName,
@@ -72,6 +63,16 @@ export default function Admin({ students }) {
     setId: setEditId,
     error: errorToasts,
     setError: setErrorToasts
+  };
+
+  const showAddModal = () => setAddShow(true);
+  const closeAddModal = () => {
+    setAddShow(false);
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
   };
 
   const showEditModal = (e) => {
