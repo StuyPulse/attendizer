@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
 
   await updatedStudent.save();
 
-  res.status(500).send({
+  res.send({
     message: "Student Updated!"
   });
 };
