@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 // This is in the admin panel, this is each student's box shown on start.
 
 export default function StudentEntry(props) {
-  const { id, name, osis, uid, show } = props;
+  const { id, name, osis, uid, show, showDelete } = props;
 
   return (
     <tr>
@@ -16,6 +16,11 @@ export default function StudentEntry(props) {
       <td>
         <Button id={id} variant="outline-primary" onClick={show}>
           Edit
+        </Button>
+      </td>
+      <td>
+        <Button id={id} variant="outline-danger" onClick={showDelete}>
+          Delete
         </Button>
       </td>
     </tr>

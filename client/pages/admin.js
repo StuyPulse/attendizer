@@ -1,6 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Meta from '../components/Meta';
 import StudentEntry from '../components/StudentEntry';
+import StudentDeleteModal from '../components/StudentDeleteModal';
 import StudentEntryModal from '../components/StudentEntryModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
@@ -29,18 +30,20 @@ export default function Admin({ students }) {
   // Add modal states
   const [addShow, setAddShow] = useState(false);
 
+  const [delShow, setDelShow] = useState(false);
+
   const [addName, setAddName] = useState('');
   const [addOsis, setAddOsis] = useState('');
   const [addUid, setAddUid] = useState('');
 
   // Edit modal states
   const [editShow, setEditShow] = useState(false);
-
   const [editName, setEditName] = useState('');
   const [editOsis, setEditOsis] = useState('');
   const [editUid, setEditUid] = useState('');
   const [editId, setEditId] = useState('');
-
+  // Delete modal states
+  const [delId, setDelId] = useState('');
   const addFormStates = {
     name: addName,
     setName: setAddName,
@@ -65,6 +68,10 @@ export default function Admin({ students }) {
     setError: setErrorToasts
   };
 
+  const delFormStates = {
+    id: delId,
+    setId: setDelId,
+  }
   const showAddModal = () => setAddShow(true);
   const closeAddModal = () => {
     setAddShow(false);
@@ -74,7 +81,10 @@ export default function Admin({ students }) {
     setAddOsis('');
     setAddUid('');
   };
+  const showDeleteModal = (e) => {
+    setDelShow(true);
 
+  }
   const showEditModal = (e) => {
     setEditShow(true);
 
@@ -87,6 +97,7 @@ export default function Admin({ students }) {
     setEditId(editingStudent.id);
   };
   const closeEditModal = () => setEditShow(false);
+  const closeDelModal = () => setDelShow(false);
 
   // Rendered page
   return (
@@ -117,6 +128,7 @@ export default function Admin({ students }) {
                   osis={"0".repeat(9 - student.osis.toString().length) + student.osis}
                   uid={"0".repeat(13 - student.uid.toString().length) + student.uid}
                   show={showEditModal}
+                  showDelete={showDeleteModal}
                 />
               ))}
             </tbody>
@@ -133,7 +145,6 @@ export default function Admin({ students }) {
             refresh={refreshData}
             formStates={addFormStates}
           />
-
           {/* Edit student modal */}
           <StudentEntryModal
             show={editShow}
@@ -142,7 +153,11 @@ export default function Admin({ students }) {
             refresh={refreshData}
             formStates={editFormStates}
           />
-
+          <StudentDeleteModal
+            show={delShow}
+            closeModal={closeDelModal}
+            formStates={delFormStates}
+          />
           <br />
 
           <Button variant="primary">Export as CSV</Button>
