@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 export default function StudentDeleteModal(props) {
-    const { show, closeModal, formStates } = props;
+    const { show, closeModal, refresh, formStates } = props;
     const deleteAction = async (e) => {
         e.preventDefault();
         const url = process.env.DEL_URL;
@@ -12,6 +12,8 @@ export default function StudentDeleteModal(props) {
             body: JSON.stringify({ id: formStates.id }),
         });
         console.log(res.body);
+
+        refresh();
         closeModal();
     }
     return (

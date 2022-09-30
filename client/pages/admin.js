@@ -83,6 +83,8 @@ export default function Admin({ students }) {
   };
   const showDeleteModal = (e) => {
     setDelShow(true);
+    // const deletedStudent = students[e.target.id - 1];
+    setDelId(e.target.id);
 
   }
   const showEditModal = (e) => {
@@ -94,7 +96,7 @@ export default function Admin({ students }) {
     setEditName(editingStudent.name);
     setEditOsis("0".repeat(9 - editingStudent.osis.toString().length) + editingStudent.osis);
     setEditUid("0".repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid);
-    setEditId(editingStudent.id);
+    setEditId(e.target.id);
   };
   const closeEditModal = () => setEditShow(false);
   const closeDelModal = () => setDelShow(false);
@@ -156,6 +158,7 @@ export default function Admin({ students }) {
           <StudentDeleteModal
             show={delShow}
             closeModal={closeDelModal}
+            refresh={refreshData}
             formStates={delFormStates}
           />
           <br />

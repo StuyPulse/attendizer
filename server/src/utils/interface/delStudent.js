@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     const db = await dbinit();
 
     studentId = req.body.id; 
-    console.log(studentId)
+    console.log(req.body);
     const removedStudent = await db.students.findOne({
         where: {
           id: studentId
