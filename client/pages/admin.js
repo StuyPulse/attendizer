@@ -91,7 +91,14 @@ export default function Admin({ students }) {
     setEditShow(true);
 
     // Get student data based on database id (might not be accurate)
-    const editingStudent = students[e.target.id - 1];
+    let editingStudent;
+
+    for(let i in students){
+      if(students[i].id == e.target.id){
+        editingStudent = students[i];
+        continue;
+      }
+    }
 
     setEditName(editingStudent.name);
     setEditOsis("0".repeat(9 - editingStudent.osis.toString().length) + editingStudent.osis);
