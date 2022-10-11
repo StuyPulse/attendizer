@@ -19,6 +19,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+// Initializes the database.
 async function initialize() {
   db.students = await students;
   db.meetings = await meetings;
