@@ -10,15 +10,19 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
+var xlsx = require("xlsx-color");
+
 export async function getServerSideProps() {
   // Fetch all students from backend
-  const res = await fetch(process.env.GET_URL);
-  const students = await res.json();
+  const studentres = await fetch(process.env.GET_STUDENTS_URL);
+  const students = await studentres.json();
+  const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+  const meetings = await meetingres.json();
 
-  return { props: { students } };
+  return { props: { students, meetings } };
 }
 
-export default function Admin({ students }) {
+export default function Admin({ students, meetings }) {
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
@@ -108,6 +112,22 @@ export default function Admin({ students }) {
   const closeEditModal = () => setEditShow(false);
   const closeDelModal = () => setDelShow(false);
 
+  const exportData = () => {
+    console.log(students);
+    console.log(meetings);
+    students.forEach(student => {
+      delete student.createdAt
+      delete student.updatedAt
+    });
+    const studentSheet = xlsx.utils.json_to_sheet(students);
+    const meetingSheet = xlsx.utils.json_to_sheet(meetings);
+
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, studentSheet, "Students");
+    xlsx.utils.book_append_sheet(workbook, meetingSheet, "Meetings");
+    xlsx.writeFile(workbook, "Students.xlsx", { compression: true });
+  }
+
   // Rendered page
   return (
     <>
@@ -170,7 +190,7 @@ export default function Admin({ students }) {
           />
           <br />
 
-          <Button variant="primary">Export as CSV</Button>
+          <Button variant="primary" onClick = {exportData}>Export as CSV</Button>
 
           <ToastContainer position="top-end" className="p-3">
             {errorToasts.map((errorToast, index) => (
