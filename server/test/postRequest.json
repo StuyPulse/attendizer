@@ -1,0 +1,14 @@
+{
+  "students": [
+    {
+      "name" : "testPerson",
+      "osis" : 123123123,
+      "uid" : 1231231231231
+    },
+    {
+      "name" : "testPerson2",
+      "osis" : 123123124,
+      "uid" : 1231231231232
+    }
+  ]
+}

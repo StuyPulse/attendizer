@@ -9,29 +9,42 @@ export default function StudentEntryModal(props) {
     e.preventDefault();
 
     // Choose the corresponding URL for the action Add or Edit
-    const url = action === 'Add' ? process.env.REG_URL : 'edit link here';
+    // const url = action === 'Add' ? process.env.REG_URL : process.env.EDIT_URL;
+    const url = action === 'Edit' ? process.env.EDIT_URL : process.env.REG_URL;
 
     // Send a POST request to the server
-    await fetch(url, {
+    const studentObject = {
+      name: formStates.name,
+      osis: formStates.osis,
+      uid: formStates.uid
+    };
+
+    if (action === 'Edit') {
+      studentObject.id = formStates.id;
+    }
+
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        students: [
-          { name: formStates.name, osis: formStates.osis, uid: formStates.uid }
-        ]
-      })
+      body: JSON.stringify({ students: [studentObject] })
     });
+
+    const body = await res.json()
 
     // Update table
     refresh();
 
-    // Clear form
-    formStates.setName('');
-    formStates.setOsis('');
-    formStates.setUid('');
+    if (res.ok) {
+      // Clear form
+      formStates.setName('');
+      formStates.setOsis('');
+      formStates.setUid('');
 
-    // Close the modal
-    closeModal();
+      // Close the modal
+      closeModal();
+    } else {
+      formStates.setError([...formStates.error, body.message]);
+    }
   };
 
   return (
