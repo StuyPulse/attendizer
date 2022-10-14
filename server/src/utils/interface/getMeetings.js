@@ -7,7 +7,10 @@ module.exports = async (req, res) => {
   const db = await dbinit();
   // Grabs all students from the database.
   // Raw tells it to grab all information, including meetings attended.
-  const meetings = await db.meetings.findAll({raw : true});
+  const meetings = await db.meetings.findAll({
+      raw : true,
+      include: db.students
+    });
   if(meetings != null){
     res.send(meetings);
     return;
