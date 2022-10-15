@@ -3,14 +3,13 @@ import Meta from '../components/Meta';
 import StudentEntry from '../components/StudentEntry';
 import StudentDeleteModal from '../components/StudentDeleteModal';
 import StudentEntryModal from '../components/StudentEntryModal';
+import ExportModal from '../components/ExportModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
 import ErrorToast from '../components/ErrorToast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-
-var xlsx = require("xlsx-color");
 
 export async function getServerSideProps() {
   // Fetch all students from backend
@@ -33,9 +32,6 @@ export default function Admin({ students, meetings }) {
 
   // Add modal states
   const [addShow, setAddShow] = useState(false);
-
-  const [delShow, setDelShow] = useState(false);
-
   const [addName, setAddName] = useState('');
   const [addOsis, setAddOsis] = useState('');
   const [addUid, setAddUid] = useState('');
@@ -46,8 +42,16 @@ export default function Admin({ students, meetings }) {
   const [editOsis, setEditOsis] = useState('');
   const [editUid, setEditUid] = useState('');
   const [editId, setEditId] = useState('');
+
   // Delete modal states
+  const [delShow, setDelShow] = useState(false);
   const [delId, setDelId] = useState('');
+
+  // Export modal states
+  const [exportShow, setExportShow] = useState(false);
+  
+
+
   const addFormStates = {
     name: addName,
     setName: setAddName,
@@ -77,14 +81,6 @@ export default function Admin({ students, meetings }) {
     setId: setDelId,
   }
   const showAddModal = () => setAddShow(true);
-  const closeAddModal = () => {
-    setAddShow(false);
-
-    // Clear form
-    setAddName('');
-    setAddOsis('');
-    setAddUid('');
-  };
   const showDeleteModal = (e) => {
     setDelShow(true);
     // const deletedStudent = students[e.target.id - 1];
@@ -109,104 +105,29 @@ export default function Admin({ students, meetings }) {
     setEditUid("0".repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid);
     setEditId(e.target.id);
   };
-  const closeEditModal = () => setEditShow(false);
-  const closeDelModal = () => setDelShow(false);
-
-  const exportData = () => {
+  const showExportModal = (e) => {
     refreshData();
-    // console.log(students);
-    // console.log(meetings);
-    students.forEach(student => {
-      delete student.createdAt
-      delete student.updatedAt
-    });
-    meetings.forEach(meeting => {
-      delete meeting.createdAt
-      delete meeting.updatedAt
-    });
-    const studentSheet = xlsx.utils.json_to_sheet(students);
-    // const meetingSheet = xlsx.utils.json_to_sheet(meetings);
-
-    let meetingTable = [[""]];
-    students.forEach(student => {
-      meetingTable[0].push(student.name);
-    });
-
-    let studentTable = []
-    let count = 0;
-
-    for(let i = 0; i<meetings.length; i++){
-      if(i>0){
-        if(meetings[i].date != meetings[i-1].date){
-          meetingTable.push([meetings[i].date]);
-          studentTable.push([meetings[i]["students.name"]])
-          count++
-          studentTable[count].push(meetings[i]["students.name"])
-        } else {
-          studentTable[count].push(meetings[i]["students.name"])
-        }
-      } else {
-        meetingTable.push([meetings[i].date]);
-        studentTable.push([meetings[i]["students.name"]])
-      }
-    }
-
-    console.log(meetingTable)
-    console.log(studentTable)
-
-    for(let i = 1; i<meetingTable[0].length; i++){
-      for(let j = 0; j<studentTable.length; j++){
-        let studentIn = false;
-        for(let k = 0; k<studentTable[j].length; k++){
-          if(studentTable[j][k] == meetingTable[0][i]){
-            studentIn = true;
-          }
-        }
-
-        meetingTable[j+1].push(studentIn);
-      }
-    }
-
-    const meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
-
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, studentSheet, "Students");
-    xlsx.utils.book_append_sheet(workbook, meetingSheet, "Meetings");
-
-    // console.log(workbook.Sheets["Meetings"]["B2"])
-    for(let i in workbook.Sheets["Meetings"]){
-      console.log(workbook.Sheets["Meetings"][i])
-
-      if(workbook.Sheets["Meetings"][i].t == "b"){
-        workbook.Sheets["Meetings"][i].t = "s";
-
-        if(workbook.Sheets["Meetings"][i].v){
-          workbook.Sheets["Meetings"][i].v = "Present";
-          workbook.Sheets["Meetings"][i].s = {
-            fill: {
-              patternType: "solid",
-              fgColor: { rgb: "36ff6b" }
-            }
-          }
-        } else {
-          workbook.Sheets["Meetings"][i].v = "Absent";
-          workbook.Sheets["Meetings"][i].s = {
-            fill: {
-              patternType: "solid",
-              fgColor: { rgb: "ff3636" }
-            }
-          }
-        }
-      }
-    }
-    workbook.Sheets["Students"]["!cols"] = [
-      {wch:5}, {wch:12}, {wch:15}, {wch:20}
-    ]
-
-    xlsx.writeFile(workbook, "Students.xlsx", { compression: true });
+    setExportShow(true);
   }
 
-    
+  const closeEditModal = () => {
+    setEditShow(false)
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
+  };
+  const closeAddModal = () => {
+    setAddShow(false);
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
+  };
+  const closeDelModal = () => setDelShow(false);
+  const closeExportModal = () => setExportShow(false);
 
   // Rendered page
   return (
@@ -270,7 +191,13 @@ export default function Admin({ students, meetings }) {
           />
           <br />
 
-          <Button variant="primary" onClick = {exportData}>Export as CSV</Button>
+          <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
+          <ExportModal
+            show={exportShow}
+            closeModal={closeExportModal}
+            students={students}
+            meetings={meetings}
+          />
 
           <ToastContainer position="top-end" className="p-3">
             {errorToasts.map((errorToast, index) => (
