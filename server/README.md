@@ -28,4 +28,4 @@ Example:
     }
   ]
 }
-2. send [curl -X POST -H "Content-Type: application/json" -d @./server/test/postRequest.json http://localhost:4000/reg] into git bash
+2. send [curl.exe -X POST -H "Content-Type: application/json" --data '@./server/test/postRequest.json' http://localhost:4000/reg] into git bash
