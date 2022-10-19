@@ -19,43 +19,34 @@ export default function StudentExportModal(props) {
       const studentSheet = xlsx.utils.json_to_sheet(students);
       // const meetingSheet = xlsx.utils.json_to_sheet(meetings);
 
-      let meetingTable = [[""]];
+      let meetingTable = [["Students"]];
       students.forEach(student => {
-        meetingTable[0].push(student.name);
+        meetingTable.push([student.name]);
       });
 
-      let studentTable = []
-      let count = 0;
+      let meetingList = [[meetings[0].date]];
+      meetingTable[0].push(meetings[0].date);
 
-      for(let i = 0; i<meetings.length; i++){
-        if(i>0){
-          if(meetings[i].date != meetings[i-1].date){
-            meetingTable.push([meetings[i].date]);
-            studentTable.push([meetings[i]["students.name"]])
-            count++
-            studentTable[count].push(meetings[i]["students.name"])
-          } else {
-            studentTable[count].push(meetings[i]["students.name"])
-          }
-        } else {
-          meetingTable.push([meetings[i].date]);
-          studentTable.push([meetings[i]["students.name"]])
+      for(let i = 1; i<meetings.length; i++){
+        if(meetings[i].date != meetings[i-1].date){
+          meetingList.push([meetings[i].date]);
+          meetingTable[0].push(meetings[i].date);
         }
       }
 
-      console.log(meetingTable)
-      console.log(studentTable)
+      let count = 0;
+      for(let i = 0; i<meetings.length; i++){
+        if(meetingList[count][0] != meetings[i].date){
+          count++;
+        }
+        meetingList[count].push(meetings[i]["students.name"]);
+      }
 
-      for(let i = 1; i<meetingTable[0].length; i++){
-        for(let j = 0; j<studentTable.length; j++){
-          let studentIn = false;
-          for(let k = 0; k<studentTable[j].length; k++){
-            if(studentTable[j][k] == meetingTable[0][i]){
-              studentIn = true;
-            }
-          }
+      console.log(meetingTable);
 
-          meetingTable[j+1].push(studentIn);
+      for(let i = 0; i<meetingList.length; i++){
+        for(let j = 1; j<meetingTable.length; j++){
+          meetingTable[j].push(meetingList[i].includes(meetingTable[j][0]));
         }
       }
 
@@ -98,11 +89,13 @@ export default function StudentExportModal(props) {
         {wch:5}, {wch:12}, {wch:15}, {wch:20}
       ]
 
-      workbook.Sheets["Meetings"]["!cols"] = [{wch:10}];
+      workbook.Sheets["Meetings"]["!cols"] = [{wch:14}];
 
       for(let i = 1; i<meetingTable[0].length; i++){
-        workbook.Sheets["Meetings"]["!cols"].push({wch:12});
+        workbook.Sheets["Meetings"]["!cols"].push({wch:10});
       }
+
+      
 
       xlsx.writeFile(workbook, "Students.xlsx", { compression: true });
       closeModal();
