@@ -20,14 +20,14 @@ export default function StudentDeleteModal(props) {
         <Modal show={show} onHide={closeModal}>
             <Modal.Header closeButton>
                 <Modal.Title>Delete Student</Modal.Title>
-                <Modal.Body>
-                    Are you sure you want to delete this student?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={closeModal}>No</Button>
-                    <Button variant="danger" onClick={deleteAction}>Yes</Button>
-                </Modal.Footer>
             </Modal.Header>
+            <Modal.Body closeButton>
+                Are you sure you want to delete this student?
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={closeModal}>No</Button>
+                <Button variant="danger" onClick={deleteAction}>Yes</Button>
+            </Modal.Footer>
         </Modal>
     )
 }

@@ -3,6 +3,7 @@ import Meta from '../components/Meta';
 import StudentEntry from '../components/StudentEntry';
 import StudentDeleteModal from '../components/StudentDeleteModal';
 import StudentEntryModal from '../components/StudentEntryModal';
+import ExportModal from '../components/ExportModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
 import ErrorToast from '../components/ErrorToast';
@@ -12,13 +13,15 @@ import { useState } from 'react';
 
 export async function getServerSideProps() {
   // Fetch all students from backend
-  const res = await fetch(process.env.GET_URL);
-  const students = await res.json();
+  const studentres = await fetch(process.env.GET_STUDENTS_URL);
+  const students = await studentres.json();
+  const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+  const meetings = await meetingres.json();
 
-  return { props: { students } };
+  return { props: { students, meetings } };
 }
 
-export default function Admin({ students }) {
+export default function Admin({ students, meetings }) {
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
@@ -29,9 +32,6 @@ export default function Admin({ students }) {
 
   // Add modal states
   const [addShow, setAddShow] = useState(false);
-
-  const [delShow, setDelShow] = useState(false);
-
   const [addName, setAddName] = useState('');
   const [addOsis, setAddOsis] = useState('');
   const [addUid, setAddUid] = useState('');
@@ -42,8 +42,16 @@ export default function Admin({ students }) {
   const [editOsis, setEditOsis] = useState('');
   const [editUid, setEditUid] = useState('');
   const [editId, setEditId] = useState('');
+
   // Delete modal states
+  const [delShow, setDelShow] = useState(false);
   const [delId, setDelId] = useState('');
+
+  // Export modal states
+  const [exportShow, setExportShow] = useState(false);
+  
+
+
   const addFormStates = {
     name: addName,
     setName: setAddName,
@@ -73,14 +81,6 @@ export default function Admin({ students }) {
     setId: setDelId,
   }
   const showAddModal = () => setAddShow(true);
-  const closeAddModal = () => {
-    setAddShow(false);
-
-    // Clear form
-    setAddName('');
-    setAddOsis('');
-    setAddUid('');
-  };
   const showDeleteModal = (e) => {
     setDelShow(true);
     // const deletedStudent = students[e.target.id - 1];
@@ -105,8 +105,29 @@ export default function Admin({ students }) {
     setEditUid("0".repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid);
     setEditId(e.target.id);
   };
-  const closeEditModal = () => setEditShow(false);
+  const showExportModal = (e) => {
+    refreshData();
+    setExportShow(true);
+  }
+
+  const closeEditModal = () => {
+    setEditShow(false)
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
+  };
+  const closeAddModal = () => {
+    setAddShow(false);
+
+    // Clear form
+    setAddName('');
+    setAddOsis('');
+    setAddUid('');
+  };
   const closeDelModal = () => setDelShow(false);
+  const closeExportModal = () => setExportShow(false);
 
   // Rendered page
   return (
@@ -170,7 +191,13 @@ export default function Admin({ students }) {
           />
           <br />
 
-          <Button variant="primary">Export as CSV</Button>
+          <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
+          <ExportModal
+            show={exportShow}
+            closeModal={closeExportModal}
+            students={students}
+            meetings={meetings}
+          />
 
           <ToastContainer position="top-end" className="p-3">
             {errorToasts.map((errorToast, index) => (
