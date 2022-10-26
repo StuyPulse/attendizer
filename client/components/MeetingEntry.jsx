@@ -1,16 +1,28 @@
 import Button from 'react-bootstrap/Button';
 
-// Display for each entry
-
 export default function MeetingEntry(props) {
-    const { date } = props;
+  const { id, date, name, show, showDelete } = props;
 
-    return (
-        <tr>
-            <td>{date}</td>
-            <td>
-                deleteButtonPlaceHolder
-            </td>
-        </tr>
-    )
+  return (
+    <tr>
+      <td>{date}</td>
+      <td>{name}</td>
+
+      <td>
+        <Button id={id} variant="outline-primary" onClick={show}>
+          Edit
+        </Button>
+      </td>
+      <td>
+        <Button id={id} variant="outline-danger" onClick={showDelete}>
+          Delete Entry
+        </Button>
+      </td>
+      <td>
+        <Button id={id} variant="outline-danger" onClick={showDelete}>
+          Delete Meeting
+        </Button>
+      </td>
+    </tr>
+  );
 }
