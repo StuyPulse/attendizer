@@ -1,8 +1,10 @@
 import Button from 'react-bootstrap/Button';
 import Meta from '../components/Meta';
 import MeetingEntry from '../components/MeetingEntry';
+
 import StudentDeleteModal from '../components/StudentDeleteModal';
-import StudentEntryModal from '../components/StudentEntryModal';
+
+import MeetingEntryModal from '../components/MeetingEntryModal';
 import ExportModal from '../components/ExportModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
@@ -31,12 +33,47 @@ export default function Meetings({ students, meetings }){
   // Export modal states
   const [exportShow, setExportShow] = useState(false);
   
-  
+  // Edit modal states
+  const [editShow, setEditShow] = useState(false);
+  const [editId, setEditId] = useState('');
+  const [editDate, setEditDate] = useState('');
+
+  const editFormStates = {
+    id: editId,
+    setid: setEditId,
+    date: editDate,
+    setDate: setEditDate
+  };
   
   const showExportModal = (e) => {
       refreshData();
       setExportShow(true);
   }
+
+  const showEditModal = (e) => {
+    setEditShow(true);
+
+    // Get student data based on database id (might not be accurate)
+    let editingMeeting;
+
+    console.log(e.target.id);
+
+    for(let i in meetings){
+      if(meetings[i].id == e.target.id.split(", ")[0] && meetings[i]["students.id"] == e.target.id.split(", ")[1]){
+        editingMeeting = meetings[i];
+        continue;
+      }
+    }
+
+    setEditId(editingMeeting["students.id"]);
+    setEditDate(editingMeeting.date);
+    console.log(editingMeeting.date);
+  };
+
+  const closeEditModal = () => {
+    setEditShow(false)
+  };
+  
   const closeExportModal = () => setExportShow(false);
 
   return (
@@ -50,6 +87,7 @@ export default function Meetings({ students, meetings }){
       <Table>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Date</th>
             <th>Name</th>
             <th></th>
@@ -60,10 +98,10 @@ export default function Meetings({ students, meetings }){
           {meetings.map((meeting) => (
             <MeetingEntry
               key={meeting.id}
-              id={meeting.id}
+              id={"" + meeting.id + ", " + meeting["students.id"]}
               date={meeting.date}
               name={meeting["students.name"]}
-              // show={showEditModal}
+              show={showEditModal}
               // showDelete={showDeleteModal}
             />
           ))}
@@ -77,6 +115,14 @@ export default function Meetings({ students, meetings }){
         closeModal={closeExportModal}
         students={students}
         meetings={meetings}
+    />
+
+    <MeetingEntryModal
+      show={editShow}
+      closeModal={closeEditModal}
+      action="Edit"
+      refresh={refreshData}
+      formStates={editFormStates}
     />
 
     <ToastContainer position="top-end" className="p-3">

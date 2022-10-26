@@ -3,6 +3,8 @@ const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const meetings = require('../../models/meeting.js');
 
+// const meetings = require('../../models/attendanceEntry.js');
+
 module.exports = async (req, res) => {
   const db = await dbinit();
   // Grabs all students from the database.
