@@ -1,10 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Meta from '../components/Meta';
 import MeetingEntry from '../components/MeetingEntry';
-
-import StudentDeleteModal from '../components/StudentDeleteModal';
-
-import MeetingEntryModal from '../components/MeetingEntryModal';
+import MeetingDeleteModal from '../components/MeetingDeleteModal';
 import ExportModal from '../components/ExportModal';
 import Table from 'react-bootstrap/Table';
 import styles from '../styles/Home.module.css';
@@ -25,7 +22,7 @@ export async function getServerSideProps() {
 export default function Meetings({ students, meetings }){
   const router = useRouter();
   const refreshData = () => {
-      router.replace(router.asPath());
+      router.replace(router.asPath);
   };
 
   const [errorToasts, setErrorToasts] = useState([]);
@@ -34,15 +31,15 @@ export default function Meetings({ students, meetings }){
   const [exportShow, setExportShow] = useState(false);
   
   // Edit modal states
-  const [editShow, setEditShow] = useState(false);
-  const [editId, setEditId] = useState('');
-  const [editDate, setEditDate] = useState('');
+  const [delShow, setDelShow] = useState(false);
+  const [delStudentId, setDelStudentId] = useState('');
+  const [delMeetingId, setDelMeetingId] = useState('');
 
-  const editFormStates = {
-    id: editId,
-    setid: setEditId,
-    date: editDate,
-    setDate: setEditDate
+  const delFormStates = {
+    studentId: delStudentId,
+    setStudentId: setDelStudentId,
+    meetingId: delMeetingId,
+    setMeetingId: setDelMeetingId
   };
   
   const showExportModal = (e) => {
@@ -50,28 +47,28 @@ export default function Meetings({ students, meetings }){
       setExportShow(true);
   }
 
-  const showEditModal = (e) => {
-    setEditShow(true);
+  const showDelModal = (e) => {
+    console.log(e.target.id);
+    setDelShow(true);
 
     // Get student data based on database id (might not be accurate)
-    let editingMeeting;
+    let deletedMeeting;
 
     console.log(e.target.id);
 
     for(let i in meetings){
       if(meetings[i].id == e.target.id.split(", ")[0] && meetings[i]["students.id"] == e.target.id.split(", ")[1]){
-        editingMeeting = meetings[i];
+        deletedMeeting = meetings[i];
         continue;
       }
     }
 
-    setEditId(editingMeeting["students.id"]);
-    setEditDate(editingMeeting.date);
-    console.log(editingMeeting.date);
+    setDelStudentId(deletedMeeting["students.id"]);
+    setDelMeetingId(deletedMeeting.id);
   };
 
-  const closeEditModal = () => {
-    setEditShow(false)
+  const closeDelModal = () => {
+    setDelShow(false)
   };
   
   const closeExportModal = () => setExportShow(false);
@@ -101,8 +98,7 @@ export default function Meetings({ students, meetings }){
               id={"" + meeting.id + ", " + meeting["students.id"]}
               date={meeting.date}
               name={meeting["students.name"]}
-              show={showEditModal}
-              // showDelete={showDeleteModal}
+              showDelete={showDelModal}
             />
           ))}
         </tbody>
@@ -117,12 +113,11 @@ export default function Meetings({ students, meetings }){
         meetings={meetings}
     />
 
-    <MeetingEntryModal
-      show={editShow}
-      closeModal={closeEditModal}
-      action="Edit"
+    <MeetingDeleteModal
+      show={delShow}
+      closeModal={closeDelModal}
       refresh={refreshData}
-      formStates={editFormStates}
+      formStates={delFormStates}
     />
 
     <ToastContainer position="top-end" className="p-3">
