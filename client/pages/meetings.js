@@ -32,14 +32,13 @@ export default function Meetings({ students, meetings }){
   
   // Edit modal states
   const [delShow, setDelShow] = useState(false);
-  const [delStudentId, setDelStudentId] = useState('');
   const [delMeetingId, setDelMeetingId] = useState('');
 
   const delFormStates = {
-    studentId: delStudentId,
-    setStudentId: setDelStudentId,
     meetingId: delMeetingId,
-    setMeetingId: setDelMeetingId
+    setMeetingId: setDelMeetingId,
+    error: errorToasts,
+    setError: setErrorToasts
   };
   
   const showExportModal = (e) => {
@@ -50,21 +49,7 @@ export default function Meetings({ students, meetings }){
   const showDelModal = (e) => {
     console.log(e.target.id);
     setDelShow(true);
-
-    // Get student data based on database id (might not be accurate)
-    let deletedMeeting;
-
-    console.log(e.target.id);
-
-    for(let i in meetings){
-      if(meetings[i].id == e.target.id.split(", ")[0] && meetings[i]["students.id"] == e.target.id.split(", ")[1]){
-        deletedMeeting = meetings[i];
-        continue;
-      }
-    }
-
-    setDelStudentId(deletedMeeting["students.id"]);
-    setDelMeetingId(deletedMeeting.id);
+    setDelMeetingId(e.target.id.split(", ")[0]);
   };
 
   const closeDelModal = () => {

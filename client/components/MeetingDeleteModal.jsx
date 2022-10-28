@@ -10,11 +10,17 @@ export default function MeetingDeleteModal(props) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-              studentId: formStates.studentId, 
               meetingId: formStates.meetingId 
             })
         });
-        console.log(res.body);
+
+        const body = await res.json()
+
+        if(res.ok){
+          console.log(res.body);
+        } else {
+          formStates.setError([...formStates.error, body.message]);
+        }
 
         refresh();
         closeModal();
