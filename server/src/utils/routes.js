@@ -7,6 +7,7 @@ module.exports = (app) => {
     const getStudents = require("./interface/getStudents.js");
     const getMeetings = require("./interface/getMeetings.js");
     const deleteStudent = require("./interface/delStudent.js");
+    const deleteMeeting = require("./interface/delMeeting.js");
     var router = require("express").Router();
 
     router.get("/", (req, res) => {
@@ -18,6 +19,7 @@ module.exports = (app) => {
     router.get("/sList", getStudents);
     router.get("/mList", getMeetings);
     router.post("/delete", deleteStudent);
+    router.post("/delMeeting", deleteMeeting);
     app.use(bodyParser.urlencoded({extended: false }));
     app.use(bodyParser.json());
     app.use("/", router);

@@ -9,5 +9,6 @@ module.exports = {
     GET_STUDENTS_URL: 'http://localhost:4000/sList',
     GET_MEETINGS_URL: 'http://localhost:4000/mList',
     DEL_URL: 'http://localhost:4000/delete',
+    DEL_MEETING_URL: "http://localhost:4000/delMeeting"
   }
 };
