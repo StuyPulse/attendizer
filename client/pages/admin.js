@@ -50,7 +50,14 @@ export default function Admin({ students, meetings }) {
   // Export modal states
   const [exportShow, setExportShow] = useState(false);
   
+  const [keyShow, setKeyShow] = useState(false);
 
+  const [ editKey, setEditKey ] = useState('');
+  const keyFormStates = {
+    key: editKey,
+    setKey: setEditKey,
+  }
+  const closeKeyModal = () => setKeyShow(false);
 
   const addFormStates = {
     name: addName,
@@ -174,6 +181,7 @@ export default function Admin({ students, meetings }) {
             action="Add"
             refresh={refreshData}
             formStates={addFormStates}
+            key={keyFormStates.key}
           />
           {/* Edit student modal */}
           <StudentEntryModal
@@ -188,6 +196,7 @@ export default function Admin({ students, meetings }) {
             closeModal={closeDelModal}
             refresh={refreshData}
             formStates={delFormStates}
+            key={keyFormStates.key}
           />
           <br />
 
@@ -204,6 +213,11 @@ export default function Admin({ students, meetings }) {
               <ErrorToast key={index} message={errorToast} />
             ))}
           </ToastContainer>
+          <KeyModal
+            show={true}
+            closeModal={ closeKeyModal }
+            formStates={ keyFormStates }
+            />
         </main>
       </div>
     </>

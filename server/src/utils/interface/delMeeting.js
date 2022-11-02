@@ -1,32 +1,30 @@
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
-
+const meeting = require('../../models/student.js');
+require('dotenv').config();
 module.exports = async (req, res) => {
     const db = await dbinit();
     if (req.body.key != process.env.KEY) {
         res.status(200).send();
         return;
     }
-    studentId = req.body.id; 
-    console.log(req.body);
-    const removedStudent = await db.students.findOne({
+    const removedMeeting = await db.meetings.findOne({
         where: {
-          id: studentId
+          id: req.body.meetingId
         }
     });
 
-    if(removedStudent == null){
+    if(removedMeeting == null){
         res.status(400).send({
-            message: 'Could not find student from ID.'
+            message: 'Could not find Meeting from ID.'
         });
         return;
     }
     
-    await removedStudent.destroy();
+    await removedMeeting.destroy();
     
     res.send({
-        message: "Student Deleted!"
+        message: "Meeting Deleted!"
     });
 }

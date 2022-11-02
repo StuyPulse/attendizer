@@ -5,7 +5,10 @@ const student = require('../../models/student.js');
 
 module.exports = async (req, res) => {
   const db = await dbinit();
-
+  if (req.body.key != process.env.KEY) {
+    res.status(200).send();
+    return;
+}
   // Takes in the first element of the array sent, as the frontend only sends arrays through the route.
   // This is done as to maintain consistency with the addStudent.
 
