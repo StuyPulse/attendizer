@@ -8,7 +8,8 @@ import styles from '../styles/Home.module.css';
 import ErrorToast from '../components/ErrorToast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import KeyModal from '../components/KeyModal';
 
 export async function getServerSideProps() {
   const studentres = await fetch(process.env.GET_STUDENTS_URL);
@@ -66,6 +67,10 @@ export default function Meetings({ students, meetings }){
   
   const closeExportModal = () => setExportShow(false);
 
+  useEffect(() => {
+    setKeyShow(true);
+  }, []);
+
   return (
     <>
     <Meta title="Meeting Panel" />
@@ -120,10 +125,10 @@ export default function Meetings({ students, meetings }){
         ))}
     </ToastContainer>
     <KeyModal
-            show={true}
-            closeModal={ closeKeyModal }
-            formStates={ keyFormStates }
-            />
+      show={ keyShow }
+      closeModal={ closeKeyModal }
+      formStates={ keyFormStates }
+      />
     </main>
   </div>
   </>

@@ -11,10 +11,12 @@ export default function KeyModal(props) {
                 <Modal.Title>Key</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-               <Form.Control
-               type="text"
-               onChange={(e) => formStates.setKey(e.target.value)}
-               />
+                <Form.Group className="mb-3" controlId="name">
+                    <Form.Control
+                    type="text"
+                    onChange={(e) => formStates.setKey(e.target.value)}
+                    />
+                </Form.Group>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="primary" onClick={closeModal}>

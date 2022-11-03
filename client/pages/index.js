@@ -54,6 +54,10 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    setKeyShow(true);
+  }, []);
+
   return (
     <>
       <Meta title="Attendizer" />
@@ -88,7 +92,7 @@ export default function Home() {
             ))}
           </ToastContainer>
           <KeyModal
-            show={true}
+            show={keyShow}
             closeModal={ closeKeyModal }
             formStates={ keyFormStates }
             />
