@@ -2,11 +2,13 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const meeting = require('../../models/student.js');
-
+require('dotenv').config();
 module.exports = async (req, res) => {
     const db = await dbinit();
-
-    console.log(req.body);
+    if (req.body.key != process.env.KEY) {
+        res.status(200).send();
+        return;
+    }
     const removedMeeting = await db.meetings.findOne({
         where: {
           id: req.body.meetingId

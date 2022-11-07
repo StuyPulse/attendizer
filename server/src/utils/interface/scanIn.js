@@ -2,12 +2,16 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const student = require('../../models/student.js');
+require('dotenv').config();
 
 module.exports = async (req, res) => {
   const db = await dbinit();
   const id = req.body.scanEntry;
   const len = id.toString().length;
-
+  if (req.body.key != process.env.KEY) {
+    res.status(200).send();
+    return;
+  }
   // Checks format of the id.
   if (len != 9 && len != 13) {
     res.status(400).send({

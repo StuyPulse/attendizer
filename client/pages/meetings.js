@@ -8,7 +8,8 @@ import styles from '../styles/Home.module.css';
 import ErrorToast from '../components/ErrorToast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import KeyModal from '../components/KeyModal';
 
 export async function getServerSideProps() {
   const studentres = await fetch(process.env.GET_STUDENTS_URL);
@@ -40,7 +41,15 @@ export default function Meetings({ students, meetings }){
     error: errorToasts,
     setError: setErrorToasts
   };
-  
+  const [keyShow, setKeyShow] = useState(false);
+
+  const [ editKey, setEditKey ] = useState('');
+  const keyFormStates = {
+    key: editKey,
+    setKey: setEditKey,
+  }
+  const closeKeyModal = () => setKeyShow(false);
+
   const showExportModal = (e) => {
       refreshData();
       setExportShow(true);
@@ -57,6 +66,10 @@ export default function Meetings({ students, meetings }){
   };
   
   const closeExportModal = () => setExportShow(false);
+
+  useEffect(() => {
+    setKeyShow(true);
+  }, []);
 
   return (
     <>
@@ -103,6 +116,7 @@ export default function Meetings({ students, meetings }){
       closeModal={closeDelModal}
       refresh={refreshData}
       formStates={delFormStates}
+      key={keyFormStates.key}
     />
 
     <ToastContainer position="top-end" className="p-3">
@@ -110,6 +124,11 @@ export default function Meetings({ students, meetings }){
         <ErrorToast key={index} message={errorToast} />
         ))}
     </ToastContainer>
+    <KeyModal
+      show={ keyShow }
+      closeModal={ closeKeyModal }
+      formStates={ keyFormStates }
+      />
     </main>
   </div>
   </>

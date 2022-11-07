@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import ErrorToast from '../components/ErrorToast';
 import Form from 'react-bootstrap/Form';
+import KeyModal from '../components/KeyModal';
 import Meta from '../components/Meta';
 import ScanEntry from '../components/ScanEntry';
 import ToastContainer from 'react-bootstrap/ToastContainer';
@@ -14,7 +15,14 @@ export default function Home() {
   // The list of successful scans and errors displayed on the page
   const [scanEntries, setScanEntries] = useState([]);
   const [errorToasts, setErrorToasts] = useState([]);
+  const [keyShow, setKeyShow] = useState(false);
 
+  const [ editKey, setEditKey ] = useState('');
+  const keyFormStates = {
+    key: editKey,
+    setKey: setEditKey,
+  }
+  const closeKeyModal = () => setKeyShow(false);
   // Scroll to bottom of scan entries log when new entries are added
   const scrollRef = useRef(null);
 
@@ -29,7 +37,7 @@ export default function Home() {
     const res = await fetch(process.env.SCAN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scanEntry: scanEntry })
+      body: JSON.stringify({ scanEntry: scanEntry, key: keyFormStates.key }),
     });
 
     // Get the response body
@@ -45,6 +53,10 @@ export default function Home() {
       setErrorToasts([...errorToasts, body.message]);
     }
   };
+
+  useEffect(() => {
+    setKeyShow(true);
+  }, []);
 
   return (
     <>
@@ -79,6 +91,11 @@ export default function Home() {
               <ErrorToast key={index} message={errorToast} />
             ))}
           </ToastContainer>
+          <KeyModal
+            show={keyShow}
+            closeModal={ closeKeyModal }
+            formStates={ keyFormStates }
+            />
         </main>
       </div>
     </>

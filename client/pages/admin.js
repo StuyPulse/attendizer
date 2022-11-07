@@ -9,7 +9,8 @@ import styles from '../styles/Home.module.css';
 import ErrorToast from '../components/ErrorToast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import KeyModal from '../components/KeyModal';
 
 export async function getServerSideProps() {
   // Fetch all students from backend
@@ -50,7 +51,14 @@ export default function Admin({ students, meetings }) {
   // Export modal states
   const [exportShow, setExportShow] = useState(false);
   
+  const [keyShow, setKeyShow] = useState(false);
+  const [ editKey, setEditKey ] = useState('');
 
+  const keyFormStates = {
+    key: editKey,
+    setKey: setEditKey,
+  }
+  const closeKeyModal = () => setKeyShow(false);
 
   const addFormStates = {
     name: addName,
@@ -129,6 +137,10 @@ export default function Admin({ students, meetings }) {
   const closeDelModal = () => setDelShow(false);
   const closeExportModal = () => setExportShow(false);
 
+  useEffect(() => {
+    setKeyShow(true);
+  }, []);
+
   // Rendered page
   return (
     <>
@@ -174,6 +186,7 @@ export default function Admin({ students, meetings }) {
             action="Add"
             refresh={refreshData}
             formStates={addFormStates}
+            key={keyFormStates.key}
           />
           {/* Edit student modal */}
           <StudentEntryModal
@@ -188,6 +201,12 @@ export default function Admin({ students, meetings }) {
             closeModal={closeDelModal}
             refresh={refreshData}
             formStates={delFormStates}
+            key={keyFormStates.key}
+          />
+          <KeyModal
+            show={ keyShow }
+            closeModal={ closeKeyModal }
+            formStates={ keyFormStates }
           />
           <br />
 

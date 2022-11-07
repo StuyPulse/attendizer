@@ -2,10 +2,14 @@ const req = require('express/lib/request');
 const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const student = require('../../models/student.js');
+require('dotenv').config();
 
 module.exports = async (req, res) => {
   students = req.body.students;
-
+  if (req.body.key != process.env.KEY) {
+    res.status(200).send();
+    return;
+}
   // This is used to avoid errors with changing the result after sending it.
   finalMessage = "";
 
