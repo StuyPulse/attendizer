@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   // Takes in the first element of the array sent, as the frontend only sends arrays through the route.
   // This is done as to maintain consistency with the addStudent.
 
-  editedStudent = req.body.students[0];
+  let editedStudent = req.body.students[0];
 
   console.log(editedStudent);
 

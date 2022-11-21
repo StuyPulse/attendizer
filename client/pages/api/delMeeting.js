@@ -5,9 +5,12 @@ const meeting = require('../../models/student.js');
 require('dotenv').config();
 module.exports = async (req, res) => {
     const db = await dbinit();
+    console.log(req.body.key);
     if (req.body.key != process.env.KEY) {
-        res.status(200).send();
-        return;
+      res.status(400).send({
+        message: 'Invalid key!'
+      });
+      return;
     }
     const removedMeeting = await db.meetings.findOne({
         where: {

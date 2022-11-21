@@ -9,7 +9,9 @@ module.exports = async (req, res) => {
   const id = req.body.scanEntry;
   const len = id.toString().length;
   if (req.body.key != process.env.KEY) {
-    res.status(200).send();
+    res.status(400).send({
+      message: 'Invalid key!'
+    });
     return;
   }
   // Checks format of the id.
@@ -20,6 +22,7 @@ module.exports = async (req, res) => {
     return;
   }
 
+  let foundStudent = {};
   // Attempts to find the student.
   if (len == 9) {
     foundStudent = await db.students.findOne({ where: { osis: id } });
@@ -36,7 +39,7 @@ module.exports = async (req, res) => {
   }
 
   // If student is found, attempt to find a meeting where the date is today.
-  meeting = await db.meetings.findOne({
+  let meeting = await db.meetings.findOne({
     where: { date: Date() }
   });
 
@@ -46,7 +49,7 @@ module.exports = async (req, res) => {
   }
 
   // Check if the student has scanned in for todays meeting.
-  scanIn = await db.entries.findOne({
+  let scanIn = await db.entries.findOne({
     where: {
       studentId: foundStudent.id,
       meetingId: meeting.id

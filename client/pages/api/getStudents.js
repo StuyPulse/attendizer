@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
   // Raw tells it to grab all information, including meetings attended.
   const students = await db.students.findAll({raw : true});
   if(students != null){
-    res.send(students);
+    res.json(students);
     return;
   }
   res.status(500).send({
