@@ -1,5 +1,3 @@
-const req = require('express/lib/request');
-const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const meeting = require('../../models/student.js');
 require('dotenv').config();

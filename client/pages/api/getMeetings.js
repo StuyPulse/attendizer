@@ -1,5 +1,3 @@
-const req = require('express/lib/request');
-const res = require('express/lib/response');
 const dbinit = require('../../models/database.js');
 const meetings = require('../../models/meeting.js');
 
