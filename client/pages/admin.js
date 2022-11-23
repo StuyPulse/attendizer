@@ -24,12 +24,29 @@ export async function getServerSideProps() {
 }
 
 export default function Admin({ }) {
-  let students = [];
-  let meetings = [];
+  const [students, setStudents] = useState([]);
+  const [meetings, setMeetings] = useState([]);
 
   const router = useRouter();
-  const refreshData = () => {
-    // router.replace(router.asPath);
+  const refreshData = async () => {
+    const studentres = await fetch(process.env.GET_STUDENTS_URL);
+    students = await studentres.json();
+    students.sort(function(firStudent, secStudent){
+      let a = firStudent.name;
+      let b = secStudent.name;
+      let firName = a.split(" ");
+      let secName = b.split(" ");
+      let firLast = a[a.length - 1];
+      let secLast = b[b.length - 1];
+      if(firLast == secLast){
+        return firName > secName
+      }
+      return firLast > secLast
+    });
+    setStudents(students);
+    const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+    meetings = await meetingres.json();
+    setMeetings(meetings);
   };
 
   // Error modal state
@@ -62,14 +79,9 @@ export default function Admin({ }) {
     key: editKey,
     setKey: setEditKey,
   }
-  const closeKeyModal = async () => {
-    console.log("TEST");
-    setKeyShow(false)
-    const studentres = await fetch(process.env.GET_STUDENTS_URL);
-    students = await studentres.json();
-    const meetingres = await fetch(process.env.GET_MEETINGS_URL);
-    meetings = await meetingres.json();
 
+  const closeKeyModal = async () => {
+    setKeyShow(false)
     refreshData();
   };
 
@@ -208,6 +220,7 @@ export default function Admin({ }) {
             action="Edit"
             refresh={refreshData}
             formStates={editFormStates}
+            keyState={keyFormStates}
           />
           <StudentDeleteModal
             show={delShow}
