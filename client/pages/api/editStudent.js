@@ -5,15 +5,17 @@ const student = require('../../models/student.js');
 require('dotenv').config();
 
 module.exports = async (req, res) => {
-  const db = await dbinit();
   if (req.body.key != process.env.KEY) {
-    res.status(200).send();
+    res.status(400).send({
+      message: 'Invalid key!'
+    });
     return;
-}
+  }
+  const db = await dbinit();
   // Takes in the first element of the array sent, as the frontend only sends arrays through the route.
   // This is done as to maintain consistency with the addStudent.
 
-  editedStudent = req.body.students[0];
+  let editedStudent = req.body.students[0];
 
   console.log(editedStudent);
 

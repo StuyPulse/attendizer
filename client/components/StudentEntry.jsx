@@ -6,10 +6,15 @@ import Button from 'react-bootstrap/Button';
 export default function StudentEntry(props) {
   const { id, name, osis, uid, show, showDelete } = props;
 
+  let fullName = name.split(" ");
+  let firName = fullName[0];
+  let lasName = fullName[fullName.length - 1];
+
   return (
     <tr>
       <td>{id}</td>
-      <td>{name}</td>
+      <td>{lasName}</td>
+      <td>{firName}</td>
       <td>{osis}</td>
       <td>{uid}</td>
 

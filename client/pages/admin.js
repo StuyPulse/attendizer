@@ -12,20 +12,42 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import KeyModal from '../components/KeyModal';
 
-export async function getServerSideProps() {
-  // Fetch all students from backend
-  const studentres = await fetch(process.env.GET_STUDENTS_URL);
-  const students = await studentres.json();
-  const meetingres = await fetch(process.env.GET_MEETINGS_URL);
-  const meetings = await meetingres.json();
+export default function Admin({ }) {
+  const [students, setStudents] = useState([]);
+  const [meetings, setMeetings] = useState([]);
 
-  return { props: { students, meetings } };
-}
-
-export default function Admin({ students, meetings }) {
-  const router = useRouter();
-  const refreshData = () => {
-    router.replace(router.asPath);
+  const refreshData = async () => {
+    const studentres = await fetch(process.env.GET_STUDENTS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
+    students = await studentres.json();
+    console.log(students);
+    if(!students.message){
+      students.sort(function(firStudent, secStudent){
+        let a = firStudent.name.split(" ");
+        let b = secStudent.name.split(" ");
+        let firName = a[0];
+        let secName = b[0];
+        let firLast = a[a.length - 1];
+        let secLast = b[b.length - 1];
+        if(firLast == secLast){
+          return firName.toString().localeCompare(secName)
+        }
+        return firLast.toString().localeCompare(secLast)
+      });
+      setStudents(students);
+    }
+    const meetingres = await fetch(process.env.GET_MEETINGS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
+    meetings = await meetingres.json();
+    if(!meetings.message){
+      setMeetings(meetings);
+    }
   };
 
   // Error modal state
@@ -51,14 +73,18 @@ export default function Admin({ students, meetings }) {
   // Export modal states
   const [exportShow, setExportShow] = useState(false);
   
-  const [keyShow, setKeyShow] = useState(false);
+  const [ keyShow, setKeyShow ] = useState(false);
   const [ editKey, setEditKey ] = useState('');
 
   const keyFormStates = {
     key: editKey,
     setKey: setEditKey,
   }
-  const closeKeyModal = () => setKeyShow(false);
+
+  const closeKeyModal = async () => {
+    setKeyShow(false)
+    refreshData();
+  };
 
   const addFormStates = {
     name: addName,
@@ -154,7 +180,8 @@ export default function Admin({ students, meetings }) {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Last Name</th>
+                <th>First Name</th>
                 <th>OSIS</th>
                 <th>UID</th>
                 <th></th>
@@ -177,7 +204,7 @@ export default function Admin({ students, meetings }) {
           </Table>
 
           {/* Add student modal */}
-          <Button variant="primary" onClick={showAddModal}>
+          <Button variant="primary" onClick={showAddModal} style={{margin:"0 0 15px 0"}}>
             Add Student
           </Button>
           <StudentEntryModal
@@ -186,7 +213,7 @@ export default function Admin({ students, meetings }) {
             action="Add"
             refresh={refreshData}
             formStates={addFormStates}
-            key={keyFormStates.key}
+            keyState={keyFormStates}
           />
           {/* Edit student modal */}
           <StudentEntryModal
@@ -195,20 +222,20 @@ export default function Admin({ students, meetings }) {
             action="Edit"
             refresh={refreshData}
             formStates={editFormStates}
+            keyState={keyFormStates}
           />
           <StudentDeleteModal
             show={delShow}
             closeModal={closeDelModal}
             refresh={refreshData}
             formStates={delFormStates}
-            key={keyFormStates.key}
+            keyState={keyFormStates}
           />
           <KeyModal
             show={ keyShow }
             closeModal={ closeKeyModal }
             formStates={ keyFormStates }
           />
-          <br />
 
           <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
           <ExportModal

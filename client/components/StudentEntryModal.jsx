@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 export default function StudentEntryModal(props) {
-  const { show, closeModal, action, refresh, formStates, key } = props;
+  const { show, closeModal, action, refresh, formStates, keyState } = props;
 
   const saveAction = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ export default function StudentEntryModal(props) {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ students: [studentObject], key: key })
+      body: JSON.stringify({ students: [studentObject], key: keyState.key })
     });
 
     const body = await res.json()
