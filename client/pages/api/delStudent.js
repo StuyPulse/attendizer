@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
         res.status(200).send();
         return;
     }
-    studentId = req.body.id; 
+    let studentId = req.body.id; 
     console.log(req.body);
     const removedStudent = await db.students.findOne({
         where: {

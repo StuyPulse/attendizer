@@ -116,7 +116,7 @@ export default function Meetings({ students, meetings }){
       closeModal={closeDelModal}
       refresh={refreshData}
       formStates={delFormStates}
-      key={keyFormStates.key}
+      keyState={keyFormStates}
     />
 
     <ToastContainer position="top-end" className="p-3">

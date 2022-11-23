@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 export default function MeetingDeleteModal(props) {
-    const { show, closeModal, refresh, formStates, key } = props;
+    const { show, closeModal, refresh, formStates, keyState } = props;
     const deleteAction = async (e) => {
         e.preventDefault();
         const url = process.env.DEL_MEETING_URL;
@@ -11,7 +11,7 @@ export default function MeetingDeleteModal(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
               meetingId: formStates.meetingId,
-              key: key
+              key: keyState.key
             })
         });
 
@@ -23,8 +23,8 @@ export default function MeetingDeleteModal(props) {
           formStates.setError([...formStates.error, body.message]);
         }
 
-        refresh();
         closeModal();
+        refresh();
     }
     return (
         <Modal show={show} onHide={closeModal}>
