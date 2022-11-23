@@ -14,18 +14,22 @@ import KeyModal from '../components/KeyModal';
 
 export async function getServerSideProps() {
   // Fetch all students from backend
-  const studentres = await fetch(process.env.GET_STUDENTS_URL);
-  const students = await studentres.json();
-  const meetingres = await fetch(process.env.GET_MEETINGS_URL);
-  const meetings = await meetingres.json();
+  // const studentres = await fetch(process.env.GET_STUDENTS_URL);
+  // const students = await studentres.json();
+  // const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+  // const meetings = await meetingres.json();
 
-  return { props: { students, meetings } };
+  // return { props: { students, meetings } };
+  return { props: {} };
 }
 
-export default function Admin({ students, meetings }) {
+export default function Admin({ }) {
+  let students = [];
+  let meetings = [];
+
   const router = useRouter();
   const refreshData = () => {
-    router.replace(router.asPath);
+    // router.replace(router.asPath);
   };
 
   // Error modal state
@@ -58,8 +62,15 @@ export default function Admin({ students, meetings }) {
     key: editKey,
     setKey: setEditKey,
   }
-  const closeKeyModal = () => {
+  const closeKeyModal = async () => {
+    console.log("TEST");
     setKeyShow(false)
+    const studentres = await fetch(process.env.GET_STUDENTS_URL);
+    students = await studentres.json();
+    const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+    meetings = await meetingres.json();
+
+    refreshData();
   };
 
   const addFormStates = {
