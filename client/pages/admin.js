@@ -29,22 +29,30 @@ export default function Admin({ }) {
 
   const router = useRouter();
   const refreshData = async () => {
-    const studentres = await fetch(process.env.GET_STUDENTS_URL);
+    const studentres = await fetch(process.env.GET_STUDENTS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
     students = await studentres.json();
     students.sort(function(firStudent, secStudent){
-      let a = firStudent.name;
-      let b = secStudent.name;
-      let firName = a.split(" ");
-      let secName = b.split(" ");
+      let a = firStudent.name.split(" ");
+      let b = secStudent.name.split(" ");
+      let firName = a[0];
+      let secName = b[0];
       let firLast = a[a.length - 1];
       let secLast = b[b.length - 1];
       if(firLast == secLast){
-        return firName > secName
+        return firName.toString().localeCompare(secName)
       }
-      return firLast > secLast
+      return firLast.toString().localeCompare(secLast)
     });
     setStudents(students);
-    const meetingres = await fetch(process.env.GET_MEETINGS_URL);
+    const meetingres = await fetch(process.env.GET_MEETINGS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
     meetings = await meetingres.json();
     setMeetings(meetings);
   };
@@ -179,7 +187,8 @@ export default function Admin({ }) {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Last Name</th>
+                <th>First Name</th>
                 <th>OSIS</th>
                 <th>UID</th>
                 <th></th>
@@ -202,7 +211,7 @@ export default function Admin({ }) {
           </Table>
 
           {/* Add student modal */}
-          <Button variant="primary" onClick={showAddModal}>
+          <Button variant="primary" onClick={showAddModal} style={{margin:"0 0 15px 0"}}>
             Add Student
           </Button>
           <StudentEntryModal
@@ -234,7 +243,6 @@ export default function Admin({ }) {
             closeModal={ closeKeyModal }
             formStates={ keyFormStates }
           />
-          <br />
 
           <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
           <ExportModal

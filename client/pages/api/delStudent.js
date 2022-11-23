@@ -5,11 +5,13 @@ const student = require('../../models/student.js');
 require('dotenv').config();
 
 module.exports = async (req, res) => {
+  if (req.body.key != process.env.KEY) {
+    res.status(400).send({
+      message: 'Invalid key!'
+    });
+    return;
+  }
     const db = await dbinit();
-    if (req.body.key != process.env.KEY) {
-        res.status(200).send();
-        return;
-    }
     let studentId = req.body.id; 
     console.log(req.body);
     const removedStudent = await db.students.findOne({

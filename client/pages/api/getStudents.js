@@ -4,6 +4,13 @@ const dbinit = require('../../models/database.js');
 const student = require('../../models/student.js');
 
 module.exports = async (req, res) => {
+  if (req.body.key != process.env.KEY) {
+    res.status(400).send({
+      message: 'Invalid key!'
+    });
+    return;
+  }
+
   const db = await dbinit();
   // Grabs all students from the database.
   // Raw tells it to grab all information, including meetings attended.

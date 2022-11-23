@@ -5,11 +5,13 @@ const student = require('../../models/student.js');
 require('dotenv').config();
 
 module.exports = async (req, res) => {
-  let students = req.body.students;
   if (req.body.key != process.env.KEY) {
-    res.status(200).send();
+    res.status(400).send({
+      message: 'Invalid key!'
+    });
     return;
-}
+  }
+  let students = req.body.students;
   // This is used to avoid errors with changing the result after sending it.
   let finalMessage = "";
 
