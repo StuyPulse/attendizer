@@ -12,22 +12,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import KeyModal from '../components/KeyModal';
 
-export async function getServerSideProps() {
-  // Fetch all students from backend
-  // const studentres = await fetch(process.env.GET_STUDENTS_URL);
-  // const students = await studentres.json();
-  // const meetingres = await fetch(process.env.GET_MEETINGS_URL);
-  // const meetings = await meetingres.json();
-
-  // return { props: { students, meetings } };
-  return { props: {} };
-}
-
 export default function Admin({ }) {
   const [students, setStudents] = useState([]);
   const [meetings, setMeetings] = useState([]);
 
-  const router = useRouter();
   const refreshData = async () => {
     const studentres = await fetch(process.env.GET_STUDENTS_URL, {
       method: 'POST',
@@ -35,26 +23,31 @@ export default function Admin({ }) {
       body: JSON.stringify({ key: editKey }),
     });
     students = await studentres.json();
-    students.sort(function(firStudent, secStudent){
-      let a = firStudent.name.split(" ");
-      let b = secStudent.name.split(" ");
-      let firName = a[0];
-      let secName = b[0];
-      let firLast = a[a.length - 1];
-      let secLast = b[b.length - 1];
-      if(firLast == secLast){
-        return firName.toString().localeCompare(secName)
-      }
-      return firLast.toString().localeCompare(secLast)
-    });
-    setStudents(students);
+    console.log(students);
+    if(!students.message){
+      students.sort(function(firStudent, secStudent){
+        let a = firStudent.name.split(" ");
+        let b = secStudent.name.split(" ");
+        let firName = a[0];
+        let secName = b[0];
+        let firLast = a[a.length - 1];
+        let secLast = b[b.length - 1];
+        if(firLast == secLast){
+          return firName.toString().localeCompare(secName)
+        }
+        return firLast.toString().localeCompare(secLast)
+      });
+      setStudents(students);
+    }
     const meetingres = await fetch(process.env.GET_MEETINGS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key: editKey }),
     });
     meetings = await meetingres.json();
-    setMeetings(meetings);
+    if(!meetings.message){
+      setMeetings(meetings);
+    }
   };
 
   // Error modal state

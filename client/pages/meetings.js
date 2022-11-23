@@ -11,19 +11,42 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import KeyModal from '../components/KeyModal';
 
-export async function getServerSideProps() {
-  const studentres = await fetch(process.env.GET_STUDENTS_URL);
-  const students = await studentres.json();
-  const meetingres = await fetch(process.env.GET_MEETINGS_URL);
-  const meetings = await meetingres.json();
+export default function Meetings({ }){
+  const [students, setStudents] = useState([]);
+  const [meetings, setMeetings] = useState([]);
 
-  return { props: { students, meetings } };
-}
-
-export default function Meetings({ students, meetings }){
-  const router = useRouter();
-  const refreshData = () => {
-      router.replace(router.asPath);
+  const refreshData = async () => {
+    const studentres = await fetch(process.env.GET_STUDENTS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
+    students = await studentres.json();
+    console.log(students);
+    if(!students.message){
+      students.sort(function(firStudent, secStudent){
+        let a = firStudent.name.split(" ");
+        let b = secStudent.name.split(" ");
+        let firName = a[0];
+        let secName = b[0];
+        let firLast = a[a.length - 1];
+        let secLast = b[b.length - 1];
+        if(firLast == secLast){
+          return firName.toString().localeCompare(secName)
+        }
+        return firLast.toString().localeCompare(secLast)
+      });
+      setStudents(students);
+    }
+    const meetingres = await fetch(process.env.GET_MEETINGS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: editKey }),
+    });
+    meetings = await meetingres.json();
+    if(!meetings.message){
+      setMeetings(meetings);
+    }
   };
 
   const [errorToasts, setErrorToasts] = useState([]);
@@ -48,7 +71,10 @@ export default function Meetings({ students, meetings }){
     key: editKey,
     setKey: setEditKey,
   }
-  const closeKeyModal = () => setKeyShow(false);
+  const closeKeyModal = () => {
+    setKeyShow(false);
+    refreshData();
+  }
 
   const showExportModal = (e) => {
       refreshData();
