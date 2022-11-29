@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "dev": "next dev && nodemon app.js",
+    "dev": "nodemon app.js && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -3,12 +3,12 @@
 module.exports = {
   reactStrictMode: true,
   env: {
-    REG_URL: 'http://localhost:3000/api/addStudent',
-    EDIT_URL: 'http://localhost:3000/api/editStudent',
-    SCAN_URL: 'http://localhost:3000/api/scanIn',
-    GET_STUDENTS_URL: 'http://localhost:3000/api/getStudents',
-    GET_MEETINGS_URL: 'http://localhost:3000/api/getMeetings',
-    DEL_URL: 'http://localhost:3000/api/delStudent',
-    DEL_MEETING_URL: "http://localhost:3000/api/delMeeting"
+    REG_URL: 'https://attendizer.stuypulse.com/api/addStudent',
+    EDIT_URL: 'https://attendizer.stuypulse.com/api/editStudent',
+    SCAN_URL: 'https://attendizer.stuypulse.com/api/scanIn',
+    GET_STUDENTS_URL: 'https://attendizer.stuypulse.com/api/getStudents',
+    GET_MEETINGS_URL: 'https://attendizer.stuypulse.com/api/getMeetings',
+    DEL_URL: 'https://attendizer.stuypulse.com/api/delStudent',
+    DEL_MEETING_URL: 'https://attendizer.stuypulse.com/api/delMeeting'
   }
 };
