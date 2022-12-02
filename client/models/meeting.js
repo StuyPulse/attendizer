@@ -5,7 +5,7 @@ const Sequelize = require('./database');
 
 module.exports = async (sequelize, Sequelize) => {
   // Sets the date object to just the date without time, ensuring no meetings are created for the same day.
-  const today = new Date(new Date(Date.now()).toDateString());
+  const today = new Date();
   const meeting = await sequelize.define(
     'meeting',
     {
