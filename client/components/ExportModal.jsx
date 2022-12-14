@@ -26,7 +26,7 @@ export default function StudentExportModal(props) {
 
       const workbook = xlsx.utils.book_new();
 
-      const meetingSheet;
+      let meetingSheet;
       if(meetings[0]){
         let meetingList = [[meetings[0].date]];
         meetingTable[0].push(meetings[0].date);
