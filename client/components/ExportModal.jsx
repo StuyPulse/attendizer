@@ -23,6 +23,8 @@ export default function StudentExportModal(props) {
       students.forEach(student => {
         meetingTable.push([student.name]);
       });
+
+      let meetingSheet;
       if(meetings[0]){
         let meetingList = [[meetings[0].date]];
         meetingTable[0].push(meetings[0].date);
@@ -50,7 +52,7 @@ export default function StudentExportModal(props) {
           }
         }
 
-        let meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
+        meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
       }
 
       const workbook = xlsx.utils.book_new();
