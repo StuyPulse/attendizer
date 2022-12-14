@@ -23,7 +23,7 @@ export default function StudentExportModal(props) {
       students.forEach(student => {
         meetingTable.push([student.name]);
       });
-      if(meetings[0]){
+      if(meetings[0].date){
         let meetingList = [[meetings[0].date]];
         meetingTable[0].push(meetings[0].date);
       }
