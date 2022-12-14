@@ -26,36 +26,38 @@ export default function StudentExportModal(props) {
       if(meetings[0]){
         let meetingList = [[meetings[0].date]];
         meetingTable[0].push(meetings[0].date);
-      }
 
-      for(let i = 1; i<meetings.length; i++){
-        if(meetings[i].date != meetings[i-1].date){
-          meetingList.push([meetings[i].date]);
-          meetingTable[0].push(meetings[i].date);
+        for(let i = 1; i<meetings.length; i++){
+          if(meetings[i].date != meetings[i-1].date){
+            meetingList.push([meetings[i].date]);
+            meetingTable[0].push(meetings[i].date);
+          }
         }
-      }
 
-      let count = 0;
-      for(let i = 0; i<meetings.length; i++){
-        if(meetingList[count][0] != meetings[i].date){
-          count++;
+        let count = 0;
+        for(let i = 0; i<meetings.length; i++){
+          if(meetingList[count][0] != meetings[i].date){
+            count++;
+          }
+          meetingList[count].push(meetings[i]["students.name"]);
         }
-        meetingList[count].push(meetings[i]["students.name"]);
-      }
 
-      console.log(meetingTable);
+        console.log(meetingTable);
 
-      for(let i = 0; i<meetingList.length; i++){
-        for(let j = 1; j<meetingTable.length; j++){
-          meetingTable[j].push(meetingList[i].includes(meetingTable[j][0]));
+        for(let i = 0; i<meetingList.length; i++){
+          for(let j = 1; j<meetingTable.length; j++){
+            meetingTable[j].push(meetingList[i].includes(meetingTable[j][0]));
+          }
         }
-      }
 
-      const meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
+        const meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
+      }
 
       const workbook = xlsx.utils.book_new();
       xlsx.utils.book_append_sheet(workbook, studentSheet, "Students");
-      xlsx.utils.book_append_sheet(workbook, meetingSheet, "Meetings");
+      if(meetings[0]){
+        xlsx.utils.book_append_sheet(workbook, meetingSheet, "Meetings");
+      }
 
       let defaultFormatting = {
         alignment: {
@@ -68,32 +70,34 @@ export default function StudentExportModal(props) {
           workbook.Sheets["Students"][i].s = JSON.parse(JSON.stringify(defaultFormatting));
         }
       }
+      if(meetings[0]){
+        for(let i in workbook.Sheets["Meetings"]){
+          if(workbook.Sheets["Meetings"][i].t == "b" || workbook.Sheets["Meetings"][i].t == "s"){
+            workbook.Sheets["Meetings"][i].s = JSON.parse(JSON.stringify(defaultFormatting));
+          }
 
-      for(let i in workbook.Sheets["Meetings"]){
-        if(workbook.Sheets["Meetings"][i].t == "b" || workbook.Sheets["Meetings"][i].t == "s"){
-          workbook.Sheets["Meetings"][i].s = JSON.parse(JSON.stringify(defaultFormatting));
-        }
+          if(workbook.Sheets["Meetings"][i].t == "b"){
+            workbook.Sheets["Meetings"][i].t = "s";
 
-        if(workbook.Sheets["Meetings"][i].t == "b"){
-          workbook.Sheets["Meetings"][i].t = "s";
-
-          if(workbook.Sheets["Meetings"][i].v){
-            workbook.Sheets["Meetings"][i].v = "Present";
-            workbook.Sheets["Meetings"][i].s.fill = {patternType: "solid", fgColor: { rgb: "36ff6b" }}
-          } else {
-            workbook.Sheets["Meetings"][i].v = "Absent";
-            workbook.Sheets["Meetings"][i].s.fill= {patternType: "solid", fgColor: { rgb: "ff3636" }}
+            if(workbook.Sheets["Meetings"][i].v){
+              workbook.Sheets["Meetings"][i].v = "Present";
+              workbook.Sheets["Meetings"][i].s.fill = {patternType: "solid", fgColor: { rgb: "36ff6b" }}
+            } else {
+              workbook.Sheets["Meetings"][i].v = "Absent";
+              workbook.Sheets["Meetings"][i].s.fill= {patternType: "solid", fgColor: { rgb: "ff3636" }}
+            }
           }
         }
       }
       workbook.Sheets["Students"]["!cols"] = [
         {wch:5}, {wch:12}, {wch:15}, {wch:20}
       ]
+      if(meetings[0]){
+        workbook.Sheets["Meetings"]["!cols"] = [{wch:14}];
 
-      workbook.Sheets["Meetings"]["!cols"] = [{wch:14}];
-
-      for(let i = 1; i<meetingTable[0].length; i++){
-        workbook.Sheets["Meetings"]["!cols"].push({wch:10});
+        for(let i = 1; i<meetingTable[0].length; i++){
+          workbook.Sheets["Meetings"]["!cols"].push({wch:10});
+        }
       }
 
       
