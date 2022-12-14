@@ -24,7 +24,9 @@ export default function StudentExportModal(props) {
         meetingTable.push([student.name]);
       });
 
-      let meetingSheet;
+      const workbook = xlsx.utils.book_new();
+
+      const meetingSheet;
       if(meetings[0]){
         let meetingList = [[meetings[0].date]];
         meetingTable[0].push(meetings[0].date);
@@ -53,13 +55,9 @@ export default function StudentExportModal(props) {
         }
 
         meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
-      }
-
-      const workbook = xlsx.utils.book_new();
-      xlsx.utils.book_append_sheet(workbook, studentSheet, "Students");
-      if(meetings[0]){
         xlsx.utils.book_append_sheet(workbook, meetingSheet, "Meetings");
       }
+      xlsx.utils.book_append_sheet(workbook, studentSheet, "Students");
 
       let defaultFormatting = {
         alignment: {
