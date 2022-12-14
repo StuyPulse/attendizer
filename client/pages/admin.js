@@ -26,8 +26,8 @@ export default function Admin({ }) {
     console.log(students);
     if(!students.message){
       students.sort(function(firStudent, secStudent){
-        let a = firStudent.name.split(" ");
-        let b = secStudent.name.split(" ");
+        let a = firStudent.name.trim().split(" ");
+        let b = secStudent.name.trim().split(" ");
         let firName = a[0];
         let secName = b[0];
         let firLast = a[a.length - 1];
@@ -170,41 +170,41 @@ export default function Admin({ }) {
   // Rendered page
   return (
     <>
-      <Meta title="Admin Panel" />
+      <Meta title="Admin Panel"/>
 
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 className={styles.title}>Admin Panel</h1>
-
-          <Table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>OSIS</th>
-                <th>UID</th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody id="studentTableBody">
-              {students.map((student) => (
-                <StudentEntry
-                  key={student.id}
-                  id={student.id}
-                  name={student.name}
-                  osis={"0".repeat(9 - student.osis.toString().length) + student.osis}
-                  uid={"0".repeat(13 - student.uid.toString().length) + student.uid}
-                  show={showEditModal}
-                  showDelete={showDeleteModal}
-                />
-              ))}
-            </tbody>
-          </Table>
-
+          <div className={styles.tcontainer}>
+            <Table striped hover>
+              <thead style={{position: "sticky", top: "-1px", background:"white"}}>
+                <tr>
+                  <th>ID</th>
+                  <th>Last Name</th>
+                  <th>First Name</th>
+                  <th>OSIS</th>
+                  <th>UID</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                {students.map((student) => (
+                  <StudentEntry
+                    key={student.id}
+                    id={student.id}
+                    name={student.name}
+                    osis={"0".repeat(9 - student.osis.toString().length) + student.osis}
+                    uid={"0".repeat(13 - student.uid.toString().length) + student.uid}
+                    show={showEditModal}
+                    showDelete={showDeleteModal}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </div>
           {/* Add student modal */}
-          <Button variant="primary" onClick={showAddModal} style={{margin:"0 0 15px 0"}}>
+          <Button variant="primary" onClick={showAddModal} style={{margin:"15px 0 15px 0"}}>
             Add Student
           </Button>
           <StudentEntryModal

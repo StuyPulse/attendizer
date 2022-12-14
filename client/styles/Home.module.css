@@ -1,10 +1,16 @@
 .container {
-  padding: 0 2rem;
+  padding: 2rem;
+  width:100%;
+}
+.tcontainer {
+  width:100%;
+  overflow: auto;
+  height: 60vh;
 }
 
 .main {
-  min-height: 100vh;
-  padding: 4rem 0;
+  min-height: 90vh;
+  padding: 0 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -25,7 +31,7 @@
 
 .title {
   margin: 0;
-  line-height: 1.15;
+  line-height: 1;
   font-size: 4rem;
 }
 
@@ -42,6 +48,16 @@
 
 .scanLog {
   width: 25em;
+  height: 7.5em;
+  border: 1px solid #ccc;
+  text-align: left;
+  padding: 0.5em;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.studentTable {
+  width: 60em;
   height: 7.5em;
   border: 1px solid #ccc;
   text-align: left;

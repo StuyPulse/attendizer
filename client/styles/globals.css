@@ -5,7 +5,13 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
-
+td, th {
+  min-width: 100px;
+  height: 25px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
 a {
   color: inherit;
   text-decoration: none;

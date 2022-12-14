@@ -69,7 +69,7 @@ export default function Home() {
           <p className={styles.description}>
             Please swipe your student ID card!
           </p>
-
+          
           <div className={styles.scanLog}>
             {scanEntries.map((entry, index) => (
               <ScanEntry key={index} name={entry.name} time={entry.time} />

@@ -104,30 +104,31 @@ export default function Meetings({ }){
     <div className={styles.container}>
       <main className={styles.main}>
       <h1 className={styles.title}>Admin Panel</h1>
+      <div className={styles.tcontainer}>
+        <Table striped hover>
+          <thead style={{position: "sticky", top: "-1px", background:"white"}}>
+          <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Name</th>
+              <th></th>
+          </tr>
+          </thead>
 
-      <Table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Name</th>
-            <th></th>
-        </tr>
-        </thead>
-
-        <tbody id="studentTableBody">
-          {meetings.map((meeting) => (
-            <MeetingEntry
-              key={meeting.id}
-              id={"" + meeting.id + ", " + meeting["students.id"]}
-              date={meeting.date}
-              name={meeting["students.name"]}
-              showDelete={showDelModal}
-            />
-          ))}
-        </tbody>
-      
-      </Table>
+          <tbody id="studentTableBody">
+            {meetings.map((meeting) => (
+              <MeetingEntry
+                key={meeting.id}
+                id={"" + meeting.id + ", " + meeting["students.id"]}
+                date={meeting.date}
+                name={meeting["students.name"]}
+                showDelete={showDelModal}
+              />
+            ))}
+          </tbody>
+        
+        </Table>
+      </div>
 
     <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
     <ExportModal
