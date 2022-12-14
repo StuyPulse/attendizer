@@ -50,7 +50,7 @@ export default function StudentExportModal(props) {
           }
         }
 
-        const meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
+        let meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
       }
 
       const workbook = xlsx.utils.book_new();
