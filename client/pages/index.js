@@ -33,11 +33,13 @@ export default function Home() {
   const processScan = async (e) => {
     e.preventDefault();
 
+    let timeString = new Date();
+
     // Send a POST request to the server
     const res = await fetch(process.env.SCAN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scanEntry: scanEntry, key: keyFormStates.key }),
+      body: JSON.stringify({ scanEntry: scanEntry, key: keyFormStates.key, time: timeString }),
     });
 
     // Get the response body

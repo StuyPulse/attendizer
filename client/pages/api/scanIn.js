@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
 
   // If student is found, attempt to find a meeting where the date is today.
   let meeting = await db.meetings.findOne({
-    where: { date: Date() }
+    where: { date: req.body.time }
   });
 
   // If meeting not found, create a meeting for today.
@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
   
     res.send({
       name: foundStudent.name,
-      time: new Date().toLocaleTimeString()
+      time: new Date(req.body.time).toTimeString("en-US")
     });
   }
   else{
