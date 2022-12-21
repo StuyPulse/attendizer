@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
   
     res.send({
       name: foundStudent.name,
-      time: new Date(req.body.time).toTimeString("en-US")
+      time: new Date(req.body.time).toLocaleTimeString()
     });
   }
   else{
