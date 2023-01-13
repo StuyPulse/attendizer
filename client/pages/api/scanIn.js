@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
 
   // If meeting not found, create a meeting for today.
   if (meeting == null) {
-    meeting = await db.meetings.create({});
+    meeting = await db.meetings.create({date: req.body.time});
   }
 
   // Check if the student has scanned in for todays meeting.
