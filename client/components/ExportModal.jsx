@@ -63,7 +63,7 @@ export default function StudentExportModal(props) {
         }
 
         for(let i = 6; i<meetingTable[0].length; i++){
-          meetingTable[1].push(meetingTable[0][i] / students.length);
+          meetingTable[1].push(meetingTable[0][i] * 100 / students.length);
         }
 
         let meetingSheet = xlsx.utils.aoa_to_sheet(meetingTable);
