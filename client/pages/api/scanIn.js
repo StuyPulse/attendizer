@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
   // If the student cannot be found (meaning the student is not in the system), return an error.
   if (foundStudent == null) {
     res.status(400).send({
-      message: 'Could not find student from osis.'
+      message: 'Could not find student from ID.'
     });
     return;
   }
