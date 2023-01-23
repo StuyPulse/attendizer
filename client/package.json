@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js && next dev",
+    "dev": "next dev && node app.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,6 +19,7 @@
     "react-dom": "18.1.0",
     "sequelize": "^6.25.7",
     "sqlite3": "^5.1.2",
+    "use-sound": "^4.0.1",
     "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
