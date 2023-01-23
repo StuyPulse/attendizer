@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import useSound from 'use-sound';
 
 import ErrorToast from '../components/ErrorToast';
 import Form from 'react-bootstrap/Form';
@@ -30,6 +31,10 @@ export default function Home() {
     scrollRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [scanEntries]);
 
+  const [errSound] = useSound("./error.mp3", { volume: 0.75 });
+  const [succSound] = useSound("./success.mp3", { volume: 1 });
+
+
   const processScan = async (e) => {
     e.preventDefault();
 
@@ -51,8 +56,12 @@ export default function Home() {
     // Display results
     if (res.ok) {
       setScanEntries([...scanEntries, body]);
+      succSound();
     } else {
       setErrorToasts([...errorToasts, body.message]);
+      if(body.message != "Student has already swiped in today!"){
+        errSound();
+      }
     }
   };
 
