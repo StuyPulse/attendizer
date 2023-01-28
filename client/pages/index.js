@@ -59,9 +59,7 @@ export default function Home() {
       succSound();
     } else {
       setErrorToasts([...errorToasts, body.message]);
-      if(body.message != "Student has already swiped in today!"){
-        errSound();
-      }
+      errSound();
     }
   };
 
