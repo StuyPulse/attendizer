@@ -6,6 +6,7 @@ var xlsx = require("xlsx-js-style");
 export default function StudentExportModal(props) {
     const { show, closeModal, students, meetings} = props;
     const exportAction = async (e) => {
+      meetings.sort(function(a, b){return a.date > b.date})
       // console.log(students);
       // console.log(meetings);
       students.forEach(student => {
