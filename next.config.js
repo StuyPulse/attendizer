@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
-
+// Needs a refactor
 module.exports = {
   reactStrictMode: true,
   env: {
-    REG_URL: 'https://attendizer.stuypulse.com/api/addStudent',
-    EDIT_URL: 'https://attendizer.stuypulse.com/api/editStudent',
-    SCAN_URL: 'https://attendizer.stuypulse.com/api/scanIn',
-    GET_STUDENTS_URL: 'https://attendizer.stuypulse.com/api/getStudents',
-    GET_MEETINGS_URL: 'https://attendizer.stuypulse.com/api/getMeetings',
-    DEL_URL: 'https://attendizer.stuypulse.com/api/delStudent',
-    DEL_MEETING_URL: 'https://attendizer.stuypulse.com/api/delMeeting'
+    REG_URL: '/api/addStudent',
+    EDIT_URL: '/api/editStudent',
+    SCAN_URL: '/api/scanIn',
+    GET_STUDENTS_URL: '/api/getStudents',
+    GET_MEETINGS_URL: '/api/getMeetings',
+    DEL_URL: '/api/delStudent',
+    DEL_MEETING_URL: '/api/delMeeting'
   }
 };
