@@ -11,15 +11,25 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  // Grabs all students from the database.
-  // Raw tells it to grab all information, including meetings attended.
-  const meetings = await prisma.meetings.findMany({
-      include: {
-        entries: true
-      }
-    });
-  if(meetings != null){
-    res.send(meetings);
+  let entries = await prisma.entries.findMany({
+    include: {
+      students: true,
+      meetings: true
+    }
+  });
+  for (let i = 0; i < entries.length; i++) {
+    let entry = entries[i];
+    entry.id = entry.meetingId;
+    entry.date = entry.meetings.date;
+    entry["students.id"] = entry.studentId;
+    entry["students.name"] = entry.students.name;
+    entry["students.osis"] = entry.students.osis;
+    entry["students.uid"] = entry.students.uid;
+  }
+  if(entries != null){
+    console.log("entries");
+    console.log(JSON.stringify(entries));
+    res.send(entries);
     return;
   }
   res.status(500).send({
