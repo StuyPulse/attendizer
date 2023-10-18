@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -9,8 +11,7 @@ module.exports = async (req, res) => {
     });
     return;
   }
-    const db = await dbinit();
-    let studentId = req.body.id; 
+      let studentId = req.body.id; 
     console.log(req.body);
     const removedStudent = await db.students.findOne({
         where: {

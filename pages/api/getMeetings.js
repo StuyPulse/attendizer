@@ -1,5 +1,6 @@
-const dbinit = require('../../models/database.js');
-const meetings = require('../../models/meeting.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
 
 // const meetings = require('../../models/attendanceEntry.js');
 
@@ -10,12 +11,12 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const db = await dbinit();
   // Grabs all students from the database.
   // Raw tells it to grab all information, including meetings attended.
-  const meetings = await db.meetings.findAll({
-      raw : true,
-      include: db.students
+  const meetings = await prisma.meetings.findMany({
+      include: {
+        entries: true
+      }
     });
   if(meetings != null){
     res.send(meetings);

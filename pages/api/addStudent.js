@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -15,7 +17,6 @@ module.exports = async (req, res) => {
 
   // console.log(req.body);
 
-  const db = await dbinit();
 
   // Loops through an array of students, checking if their information is correctly formatted.
   // This will then add that student to the database.
@@ -42,11 +43,17 @@ module.exports = async (req, res) => {
       uid: students[i].uid
     };
   
-    await db.students
-    .create(newStudent, { fields: ['name', 'osis', 'uid'] })
-    .catch((err) => {
-      finalMessage += '[' + i + '] ' + "Failed to load, likely due to this OSIS or UID already existing in the system. ";
-    });
+    await prisma.students
+    .create({
+      data: {
+        name: newStudent.name,
+        osis: parseInt(newStudent.osis),
+        uid: parseInt(newStudent.uid)
+      }
+    })
+    // .catch((err) => {
+    //   finalMessage += '[' + i + '] ' + "Failed to load, likely due to this OSIS or UID already existing in the system. ";
+    // });
   }
 
   // Returns errors, or if there are no errors, sends back a positive result.

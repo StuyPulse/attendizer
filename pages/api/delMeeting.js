@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const meeting = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 module.exports = async (req, res) => {
   if (req.body.key != process.env.KEY) {
@@ -8,8 +10,7 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const db = await dbinit();
-  const removedMeeting = await db.meetings.findOne({
+  const removedMeeting = await primsa.meetings.findOne({
       where: {
         id: req.body.meetingId
       }

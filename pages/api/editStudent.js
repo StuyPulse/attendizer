@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -9,7 +11,6 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const db = await dbinit();
   // Takes in the first element of the array sent, as the frontend only sends arrays through the route.
   // This is done as to maintain consistency with the addStudent.
 
