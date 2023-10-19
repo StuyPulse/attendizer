@@ -13,9 +13,9 @@ module.exports = async (req, res) => {
   }
       let studentId = req.body.id; 
     console.log(req.body);
-    const removedStudent = await db.students.findOne({
+    const removedStudent = await prisma.students.findUnique({
         where: {
-          id: studentId
+          id: parseInt(studentId)
         }
     });
 
@@ -26,7 +26,11 @@ module.exports = async (req, res) => {
         return;
     }
     
-    await removedStudent.destroy();
+    await prisma.students.delete({
+      where: {
+        id: parseInt(studentId)
+      }
+    })
     
     res.send({
         message: "Student Deleted!"
