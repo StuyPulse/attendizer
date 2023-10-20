@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
       return;
   }
   
-  await prisma.meetings.delete({
+  await prisma.entries.delete({
     where: {
       id: removedMeeting.id
     }
