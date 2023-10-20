@@ -10,9 +10,9 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const removedMeeting = await primsa.meetings.findOne({
+  const removedMeeting = await prisma.meetings.findUnique({
       where: {
-        id: req.body.meetingId
+        id: parseInt(req.body.meetingId)
       }
   });
 
@@ -23,7 +23,11 @@ module.exports = async (req, res) => {
       return;
   }
   
-  await removedMeeting.destroy();
+  await prisma.meetings.delete({
+    where: {
+      id: removedMeeting.id
+    }
+  })
   
   res.send({
       message: "Meeting Deleted!"

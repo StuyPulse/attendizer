@@ -60,13 +60,13 @@ module.exports = async (req, res) => {
 
   // If the student has not, create an attendance entry for them.
   if (scanIn == null) {
-    console.log("should create something I htink maybe pls")
     prisma.entries.create({
       data: {
         studentId: foundStudent.id,
-        meetingId: meeting.id
+        meetingId: meeting.id,
       }
-    })
+    }).catch(err => console.log(err));
+    console.log(await prisma.entries.findMany().then(res => res));
     
     res.send({
       name: foundStudent.name,
