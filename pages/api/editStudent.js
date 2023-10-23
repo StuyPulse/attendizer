@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
   }
 
   // Finds the student based on the unique id assigned on creation.
-  const updatedStudent = await db.students.findOne({
+  const updatedStudent = await prisma.students.findUnique({
     where: {
       id: editedStudent.id
     }
