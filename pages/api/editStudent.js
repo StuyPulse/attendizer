@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
       id: parseInt(editedStudent.id)
     },
     data: {
-      name: parseInt(editedStudent.name),
+      name: editedStudent.name,
       osis: parseInt(editedStudent.osis),
       uid: parseInt(editedStudent.uid)
     }
