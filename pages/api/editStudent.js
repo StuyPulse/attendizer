@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  await prisma.user.update({
+  await prisma.students.update({
     where: {
       id: parseInt(editedStudent.id)
     },
