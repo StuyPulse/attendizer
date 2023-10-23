@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
   // Finds the student based on the unique id assigned on creation.
   const updatedStudent = await prisma.students.findUnique({
     where: {
-      id: editedStudent.id
+      id: parseInt(editedStudent.id)
     }
   });
 
@@ -54,15 +54,16 @@ module.exports = async (req, res) => {
     });
     return;
   }
-
-  // Otherwise, update the student.
-  updatedStudent.set({
-    name: editedStudent.name,
-    osis: editedStudent.osis,
-    uid: editedStudent.uid
-  });
-
-  await updatedStudent.save();
+  await prisma.user.update({
+    where: {
+      id: parseInt(editedStudent.id)
+    },
+    data: {
+      name: parseInt(editedStudent.name),
+      osis: parseInt(editedStudent.osis),
+      uid: parseInt(editedStudent.uid)
+    }
+  })
 
   res.send({
     message: "Student Updated!"
