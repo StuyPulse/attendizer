@@ -63,6 +63,10 @@ module.exports = async (req, res) => {
       osis: parseInt(editedStudent.osis),
       uid: parseInt(editedStudent.uid)
     }
+  }).catch(e => {
+    res.status(400).send({
+      message: "Prisma operation failed with reason " + e
+    })
   })
 
   res.send({
