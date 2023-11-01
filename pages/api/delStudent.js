@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -9,25 +11,28 @@ module.exports = async (req, res) => {
     });
     return;
   }
-    const db = await dbinit();
-    let studentId = req.body.id; 
-    console.log(req.body);
-    const removedStudent = await db.students.findOne({
-        where: {
-          id: studentId
-        }
-    });
-
-    if(removedStudent == null){
-        res.status(400).send({
-            message: 'Could not find student from ID.'
-        });
-        return;
+  let studentId = req.body.id;
+  console.log(req.body);
+  const removedStudent = await prisma.students.findUnique({
+    where: {
+      id: parseInt(studentId)
     }
-    
-    await removedStudent.destroy();
-    
-    res.send({
-        message: "Student Deleted!"
+  });
+
+  if (removedStudent == null) {
+    res.status(400).send({
+      message: 'Could not find student from ID.'
     });
+    return;
+  }
+
+  await prisma.students.delete({
+    where: {
+      id: parseInt(studentId)
+    }
+  })
+
+  res.send({
+    message: "Student Deleted!"
+  });
 }

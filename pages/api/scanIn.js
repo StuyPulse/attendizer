@@ -1,10 +1,11 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
-  const db = await dbinit();
-  const id = req.body.scanEntry;
+  let id = req.body.scanEntry;
   const len = id.toString().length;
   if (req.body.key != process.env.KEY) {
     res.status(400).send({
@@ -22,11 +23,12 @@ module.exports = async (req, res) => {
 
   let foundStudent = {};
   // Attempts to find the student.
+  id = parseInt(id);
   if (len == 9) {
-    foundStudent = await db.students.findOne({ where: { osis: id } });
+    foundStudent = await prisma.students.findUnique({ where: { osis: id } });
   }
   if (len == 13) {
-    foundStudent = await db.students.findOne({ where: { uid: id } });
+    foundStudent = await prisma.students.findUnique({ where: { uid: id } });
   }
   // If the student cannot be found (meaning the student is not in the system), return an error.
   if (foundStudent == null) {
@@ -37,30 +39,35 @@ module.exports = async (req, res) => {
   }
 
   // If student is found, attempt to find a meeting where the date is today.
-  let meeting = await db.meetings.findOne({
+  let meeting = await prisma.meetings.findUnique({
     where: { date: req.body.time }
   });
 
   // If meeting not found, create a meeting for today.
   if (meeting == null) {
-    meeting = await db.meetings.create({date: req.body.time});
+    meeting = await prisma.meetings.create(/*{date: req.body.time}*/);
   }
 
   // Check if the student has scanned in for todays meeting.
-  let scanIn = await db.entries.findOne({
+  let scanIn = await prisma.entries.findUnique({
     where: {
-      studentId: foundStudent.id,
-      meetingId: meeting.id
+      studentId_meetingId: {
+        studentId: foundStudent.id,
+        meetingId: meeting.id
+      }
     }
   });
 
   // If the student has not, create an attendance entry for them.
   if (scanIn == null) {
-    db.entries.create({
-      studentId: foundStudent.id,
-      meetingId: meeting.id
-    });
-  
+    prisma.entries.create({
+      data: {
+        studentId: foundStudent.id,
+        meetingId: meeting.id,
+      }
+    }).catch(err => console.log(err));
+    console.log(await prisma.entries.findMany().then(res => res));
+    
     res.send({
       name: foundStudent.name,
       time: new Date(req.body.time).toLocaleTimeString()

@@ -44,6 +44,7 @@ export default function Meetings({ }){
       body: JSON.stringify({ key: editKey }),
     });
     meetings = await meetingres.json();
+    console.log(JSON.stringify(meetings))
     if(!meetings.message){
       setMeetings(meetings);
     }

@@ -9,14 +9,14 @@ export default function StudentExportModal(props) {
       meetings.sort(function(a, b){return a.date > b.date})
       // console.log(students);
       // console.log(meetings);
-      students.forEach(student => {
-        delete student.createdAt
-        delete student.updatedAt
-      });
-      meetings.forEach(meeting => {
-        delete meeting.createdAt
-        delete meeting.updatedAt
-      });
+      // students.forEach(student => {
+      //   delete student.createdAt
+      //   delete student.updatedAt
+      // });
+      // meetings.forEach(meeting => {
+      //   delete meeting.createdAt
+      //   delete meeting.updatedAt
+      // });
 
       const workbook = xlsx.utils.book_new();
 

@@ -1,5 +1,7 @@
-const dbinit = require('../../models/database.js');
-const student = require('../../models/student.js');
+import { PrismaClient } from '@prisma/client';
+ 
+const prisma = new PrismaClient();
+
 require('dotenv').config();
 
 module.exports = async (req, res) => {
@@ -9,7 +11,6 @@ module.exports = async (req, res) => {
     });
     return;
   }
-  const db = await dbinit();
   // Takes in the first element of the array sent, as the frontend only sends arrays through the route.
   // This is done as to maintain consistency with the addStudent.
 
@@ -40,9 +41,9 @@ module.exports = async (req, res) => {
   }
 
   // Finds the student based on the unique id assigned on creation.
-  const updatedStudent = await db.students.findOne({
+  const updatedStudent = await prisma.students.findUnique({
     where: {
-      id: editedStudent.id
+      id: parseInt(editedStudent.id)
     }
   });
 
@@ -53,15 +54,20 @@ module.exports = async (req, res) => {
     });
     return;
   }
-
-  // Otherwise, update the student.
-  updatedStudent.set({
-    name: editedStudent.name,
-    osis: editedStudent.osis,
-    uid: editedStudent.uid
-  });
-
-  await updatedStudent.save();
+  await prisma.students.update({
+    where: {
+      id: parseInt(editedStudent.id)
+    },
+    data: {
+      name: editedStudent.name,
+      osis: parseInt(editedStudent.osis),
+      uid: parseInt(editedStudent.uid)
+    }
+  }).catch(e => {
+    res.status(400).send({
+      message: "Prisma operation failed with reason " + e
+    })
+  })
 
   res.send({
     message: "Student Updated!"
