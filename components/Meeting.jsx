@@ -7,7 +7,7 @@ export default function Meeting(props) {
     <tr>
       <td>{id}</td>
       <td>{date}</td>
-      <td>{attendees.length}</td>
+      <td>{attendees}</td>
       <td>
         <Button id={id} variant="outline-danger" onClick={showDelete}>
           Delete Meeting
