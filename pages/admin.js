@@ -1,18 +1,19 @@
-import Button from 'react-bootstrap/Button';
-import Meta from '../components/Meta';
-import StudentEntry from '../components/StudentEntry';
-import StudentDeleteModal from '../components/StudentDeleteModal';
-import StudentEntryModal from '../components/StudentEntryModal';
-import ExportModal from '../components/ExportModal';
-import Table from 'react-bootstrap/Table';
-import styles from '../styles/Home.module.css';
-import ErrorToast from '../components/ErrorToast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import KeyModal from '../components/KeyModal';
 
-export default function Admin({ }) {
+import Button from 'react-bootstrap/Button';
+import ErrorToast from '../components/ErrorToast';
+import ExportModal from '../components/ExportModal';
+import KeyModal from '../components/KeyModal';
+import Meta from '../components/Meta';
+import StudentDeleteModal from '../components/StudentDeleteModal';
+import StudentEntry from '../components/StudentEntry';
+import StudentEntryModal from '../components/StudentEntryModal';
+import Table from 'react-bootstrap/Table';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import styles from '../styles/Home.module.css';
+import { useRouter } from 'next/router';
+
+export default function Admin({}) {
   const [students, setStudents] = useState([]);
   const [meetings, setMeetings] = useState([]);
 
@@ -20,32 +21,32 @@ export default function Admin({ }) {
     const studentres = await fetch(process.env.GET_STUDENTS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: editKey }),
+      body: JSON.stringify({ key: editKey })
     });
     students = await studentres.json();
     console.log(students);
-    if(!students.message){
-      students.sort(function(firStudent, secStudent){
-        let a = firStudent.name.trim().split(" ");
-        let b = secStudent.name.trim().split(" ");
+    if (!students.message) {
+      students.sort(function (firStudent, secStudent) {
+        let a = firStudent.name.trim().split(' ');
+        let b = secStudent.name.trim().split(' ');
         let firName = a[0];
         let secName = b[0];
         let firLast = a[a.length - 1];
         let secLast = b[b.length - 1];
-        if(firLast == secLast){
-          return firName.toString().localeCompare(secName)
+        if (firLast == secLast) {
+          return firName.toString().localeCompare(secName);
         }
-        return firLast.toString().localeCompare(secLast)
+        return firLast.toString().localeCompare(secLast);
       });
       setStudents(students);
     }
-    const meetingres = await fetch(process.env.GET_MEETINGS_URL, {
+    const meetingres = await fetch(process.env.GET_ENTRIES_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: editKey }),
+      body: JSON.stringify({ key: editKey })
     });
     meetings = await meetingres.json();
-    if(!meetings.message){
+    if (!meetings.message) {
       setMeetings(meetings);
     }
   };
@@ -72,17 +73,17 @@ export default function Admin({ }) {
 
   // Export modal states
   const [exportShow, setExportShow] = useState(false);
-  
-  const [ keyShow, setKeyShow ] = useState(false);
-  const [ editKey, setEditKey ] = useState('');
+
+  const [keyShow, setKeyShow] = useState(false);
+  const [editKey, setEditKey] = useState('');
 
   const keyFormStates = {
     key: editKey,
-    setKey: setEditKey,
-  }
+    setKey: setEditKey
+  };
 
   const closeKeyModal = async () => {
-    setKeyShow(false)
+    setKeyShow(false);
     refreshData();
   };
 
@@ -112,40 +113,44 @@ export default function Admin({ }) {
 
   const delFormStates = {
     id: delId,
-    setId: setDelId,
-  }
+    setId: setDelId
+  };
   const showAddModal = () => setAddShow(true);
   const showDeleteModal = (e) => {
     setDelShow(true);
     // const deletedStudent = students[e.target.id - 1];
     setDelId(e.target.id);
-
-  }
+  };
   const showEditModal = (e) => {
     setEditShow(true);
 
     // Get student data based on database id (might not be accurate)
     let editingStudent;
 
-    for(let i in students){
-      if(students[i].id == e.target.id){
+    for (let i in students) {
+      if (students[i].id == e.target.id) {
         editingStudent = students[i];
         continue;
       }
     }
 
     setEditName(editingStudent.name);
-    setEditOsis("0".repeat(9 - editingStudent.osis.toString().length) + editingStudent.osis);
-    setEditUid("0".repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid);
+    setEditOsis(
+      '0'.repeat(9 - editingStudent.osis.toString().length) +
+        editingStudent.osis
+    );
+    setEditUid(
+      '0'.repeat(13 - editingStudent.uid.toString().length) + editingStudent.uid
+    );
     setEditId(e.target.id);
   };
   const showExportModal = (e) => {
     refreshData();
     setExportShow(true);
-  }
+  };
 
   const closeEditModal = () => {
-    setEditShow(false)
+    setEditShow(false);
 
     // Clear form
     setAddName('');
@@ -170,14 +175,16 @@ export default function Admin({ }) {
   // Rendered page
   return (
     <>
-      <Meta title="Admin Panel"/>
+      <Meta title="Admin Panel" />
 
       <div className={styles.container}>
         <main className={styles.main}>
           <h1 className={styles.title}>Admin Panel</h1>
           <div className={styles.tcontainer}>
             <Table striped hover>
-              <thead style={{position: "sticky", top: "-1px", background:"white"}}>
+              <thead
+                style={{ position: 'sticky', top: '-1px', background: 'white' }}
+              >
                 <tr>
                   <th>ID</th>
                   <th>Last Name</th>
@@ -194,8 +201,14 @@ export default function Admin({ }) {
                     key={student.id}
                     id={student.id}
                     name={student.name}
-                    osis={"0".repeat(9 - student.osis.toString().length) + student.osis}
-                    uid={"0".repeat(13 - student.uid.toString().length) + student.uid}
+                    osis={
+                      '0'.repeat(9 - student.osis.toString().length) +
+                      student.osis
+                    }
+                    uid={
+                      '0'.repeat(13 - student.uid.toString().length) +
+                      student.uid
+                    }
                     show={showEditModal}
                     showDelete={showDeleteModal}
                   />
@@ -204,7 +217,11 @@ export default function Admin({ }) {
             </Table>
           </div>
           {/* Add student modal */}
-          <Button variant="primary" onClick={showAddModal} style={{margin:"15px 0 15px 0"}}>
+          <Button
+            variant="primary"
+            onClick={showAddModal}
+            style={{ margin: '15px 0 15px 0' }}
+          >
             Add Student
           </Button>
           <StudentEntryModal
@@ -232,12 +249,14 @@ export default function Admin({ }) {
             keyState={keyFormStates}
           />
           <KeyModal
-            show={ keyShow }
-            closeModal={ closeKeyModal }
-            formStates={ keyFormStates }
+            show={keyShow}
+            closeModal={closeKeyModal}
+            formStates={keyFormStates}
           />
 
-          <Button variant="primary" onClick = {showExportModal}>Export as XLSX</Button>
+          <Button variant="primary" onClick={showExportModal}>
+            Export as XLSX
+          </Button>
           <ExportModal
             show={exportShow}
             closeModal={closeExportModal}

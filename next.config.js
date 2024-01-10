@@ -7,8 +7,9 @@ module.exports = {
     EDIT_URL: '/api/editStudent',
     SCAN_URL: '/api/scanIn',
     GET_STUDENTS_URL: '/api/getStudents',
-    GET_MEETINGS_URL: '/api/getMeetings',
+    GET_ENTRIES_URL: '/api/getEntries',
     DEL_URL: '/api/delStudent',
-    DEL_MEETING_URL: '/api/delMeeting'
+    DEL_MEETING_URL: '/api/delMeeting',
+    GET_MEETINGS_URL: '/api/getMeetings'
   }
 };
